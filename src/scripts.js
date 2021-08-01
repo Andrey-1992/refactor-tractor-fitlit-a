@@ -189,7 +189,7 @@ let userRepository = new UserRepository();
 // let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
 // console.log("date here--->", currentDate)
 
-let todayDate = "2019/09/22";
+let todayDate;
 
 
 // default date--- last date in the array
@@ -218,9 +218,6 @@ function fetchData() {
 
   Promise.all([userInfo, activityInfo, hydrationInfo, sleepInfo])
   .then(data => initializedData(data[0], data[1], data[2], data[3]))
-  // .then(initial user data only)
-  // .then(intialize sleep, hydro, and activity data)
-  // .then(populate page)
   .catch(err => console.error(err))
 
 }
@@ -298,7 +295,7 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
   let postObject = {
      userID: user.id,
-     date: todayDate,
+     date: currentDate,
      numSteps: numStepsInput,
      minutesActive: minActiveInput,
      flightsOfStairs: flightStairsInput
@@ -405,15 +402,18 @@ function userInformation(user) {
 ///POST DATA FUNCTIONS ---------------------------------------
 //event listener
 
-document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
-  addSleep(e);
-})
+document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
+  if (e.target.classList.contains("sleep-submit")) {
+    addSleep(e);
+  }
+});
 
 function addSleep(e) {
-  e.preventDefault();
+  // e.preventDefault();
+  console.log("I am here")
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-  todayDate = currentDate ;
+  // todayDate = currentDate ;
   const formData = new FormData(e.target);
 
   const sleepItem = {
@@ -514,13 +514,13 @@ sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(t
 
 sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-  return user.id === userRepository.getLongestSleepers(todayDate)
-}).getFirstName();
+// sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+//   return user.id === userRepository.getLongestSleepers(todayDate)
+// }).getFirstName();
 
-sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-  return user.id === userRepository.getWorstSleepers(todayDate)
-}).getFirstName();
+// sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+//   return user.id === userRepository.getWorstSleepers(todayDate)
+// }).getFirstName();
 
 sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
