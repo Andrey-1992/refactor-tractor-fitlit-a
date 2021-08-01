@@ -189,7 +189,7 @@ let userRepository = new UserRepository();
 // let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
 // console.log("date here--->", currentDate)
 
-let todayDate;
+let todayDate= '2020/01/19';
 
 
 // default date--- last date in the array
@@ -398,23 +398,17 @@ function userInformation(user) {
 // ------------------------------------------------------------------>
 
 
-
 ///POST DATA FUNCTIONS ---------------------------------------
-//event listener
-
-document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
-  if (e.target.classList.contains("sleep-submit")) {
-    addSleep(e);
-  }
-});
+document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
+  addSleep(e);
+})
 
 function addSleep(e) {
-  // e.preventDefault();
-  console.log("I am here")
+  e.preventDefault();
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-  // todayDate = currentDate ;
   const formData = new FormData(e.target);
+  todayDate = currentDate;
 
   const sleepItem = {
     userID: user.id,
@@ -423,42 +417,37 @@ function addSleep(e) {
     sleepQuality: formData.get('sleepQuality')
   }
 
-  addSleepItem(sleepItem);
+  fetchCalls.postNewData('sleep', sleepItem);
+  fetchData();
+
+
+  // addSleepItem(sleepItem);
   e.target.reset();
 }
 
-function addSleepItem(sleepItem) {
-  fetch('http://localhost:3001/api/v1/sleep', {
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(sleepItem)
-  })
-  .then(response => {
-    checkForError(response)
-  })
-  .then(
-    fetchData()
-  )
-  .catch(err => {
-    console.log(err)
-    displayErrorMessage(err)
-  })
-}
+// function addSleepItem(sleepItem) {
+//   fetch('http://localhost:3001/api/v1/sleep', {
+//     method: 'POST',
+//     headers: { 'Content-type': 'application/json' },
+//     body: JSON.stringify(sleepItem)
+//   })
+//  .then(response => checkForError(response))
+//   .then(fetchData())
+//   .catch(err => displayErrorMessage(err)) 
+// }
 
-function checkForError(response) {
-  if (!response.ok) {
-    throw new Error ('Please make sure all fields are selected.')
-  } else {
-    return response.json();
-  }
-}
+// function checkForError(response) {
+//   if (!response.ok) {
+//     throw new Error ('Please make sure all fields are selected.')
+//   } else {
+//     return response.json();
+//   }
+// }
 
-function displayErrorMessage(err) {
-  const errorField = document.querySelector('.js-error');
-  errorField.innerHTML = `${err} -Please check back later.`
-}
-
-
+// function displayErrorMessage(err) {
+//   const errorField = document.querySelector('.js-error');
+//   errorField.innerHTML = `${err} -Please check back later.`
+// }
 
 
 
