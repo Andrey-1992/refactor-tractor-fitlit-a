@@ -12,10 +12,11 @@ import Activity from './Activity';
 import Hydration from './Hydration';
 import Sleep from './Sleep';
 import dayjs from 'dayjs';
+import fetchCalls from './apiCalls';
+import domUpdates from './domUpdates';
 
 
 // import activityData from './data/activity';
-import fetchCalls from './apiCalls';
 
 // let defaultDate = new Date();
 // // console.log(defaultDate)
@@ -284,6 +285,7 @@ function storeUserData (activityData, hydrationData, sleepData) {
   function postActivityData() {
     // preventDefault(); ---> Is not longer nesseasry because I wanit to update !
     // todayDate = currentDate;
+    // let user = userRepository.users[1];
 
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
@@ -293,8 +295,6 @@ function storeUserData (activityData, hydrationData, sleepData) {
   const minActiveInput = parseInt(addMinActv.value);
 
   const flightStairsInput = parseInt(addFlightStairs.value);
-
-  // let user = userRepository.users[1];
 
   let postObject = {
      userID: user.id,
