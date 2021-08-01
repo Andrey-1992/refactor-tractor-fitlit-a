@@ -238,6 +238,7 @@ class User {
           'totalWeeklySteps': matchedFriend.totalStepsThisWeek
         })
     })
+    
     this.calculateTotalStepsThisWeek(date);
       // if(!date){
     //   this.sleepQualityAverage[0].date;

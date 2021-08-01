@@ -294,7 +294,7 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
   const flightStairsInput = parseInt(addFlightStairs.value);
 
-  let user = userRepository.users[1];
+  // let user = userRepository.users[1];
 
   let postObject = {
      userID: user.id,
@@ -416,6 +416,8 @@ function addSleep(e) {
   todayDate = currentDate ;
   const formData = new FormData(e.target);
 
+  console.log(formData.get('hoursSlept'));
+
   const sleepItem = {
     userID: user.id,
     date: currentDate,
@@ -514,13 +516,13 @@ sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(t
 
 sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-  return user.id === userRepository.getLongestSleepers(todayDate)
-}).getFirstName();
-
-sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-  return user.id === userRepository.getWorstSleepers(todayDate)
-}).getFirstName();
+// sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+//   return user.id === userRepository.getLongestSleepers(todayDate)
+// }).getFirstName();
+//
+// sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+//   return user.id === userRepository.getWorstSleepers(todayDate)
+// }).getFirstName();
 
 sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
