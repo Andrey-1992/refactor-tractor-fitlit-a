@@ -87,6 +87,7 @@ let trendingStepsPhraseContainer = document.querySelector('.trending-steps-phras
 let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phrase-container');
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
+let hydrationDataEntry = document.querySelectorAll('.num-ounces-input');
 
 // queries for DOM post request !
 let addNumSteps = document.querySelector('.add-num-steps');
