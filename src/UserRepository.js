@@ -19,6 +19,7 @@ class UserRepository {
     return totalSleepQuality / this.users.length;
   }
   calculateAverageDailyWater(date) {
+     date = user.activityRecord[0].date;
     let todaysDrinkers = this.users.filter(user => {
       return user.addDailyOunces(date) > 0;
     });
@@ -27,25 +28,29 @@ class UserRepository {
     }, 0)
     return Math.floor(sumDrankOnDate / todaysDrinkers.length);
   }
-  findBestSleepers(date) {
-    return this.users.filter(user => {
-      return user.calculateAverageQualityThisWeek(date) > 3;
-    })
-  }
-  getLongestSleepers(date) {
-    return sleepData.filter(sleep => {
-      return sleep.date === date;
-    }).sort((a, b) => {
-      return b.hoursSlept - a.hoursSlept;
-    })[0].userID;
-  }
-  getWorstSleepers(date) {
-    return sleepData.filter(sleep => {
-      return sleep.date === date;
-    }).sort((a, b) => {
-      return a.hoursSlept - b.hoursSlept;
-    })[0].userID;
-  }
+  //logic needed for all of these methods that take in a data are needed.
+  // findBestSleepers(date) {
+  //   console.log("this.users[0]", this.users[0])
+  //    date = user.activityRecord[0].date;
+  //   return this.users.filter(user => {
+  //     return user.calculateAverageQualityThisWeek(date) > 3;
+  //   })
+  // }
+  // getLongestSleepers(date) {
+  //   date = user.activityRecord[0].date;
+  //   return sleepData.filter(sleep => {
+  //     return sleep.date === date;
+  //   }).sort((a, b) => {
+  //     return b.hoursSlept - a.hoursSlept;
+  //   })[0].userID;
+  // }
+  // getWorstSleepers(date) {
+  //   return sleepData.filter(sleep => {
+  //     return sleep.date === date;
+  //   }).sort((a, b) => {
+  //     return a.hoursSlept - b.hoursSlept;
+  //   })[0].userID;
+  // }
   calculateAverages(user, steps) {
     let date = user.activityRecord[0].date;
 

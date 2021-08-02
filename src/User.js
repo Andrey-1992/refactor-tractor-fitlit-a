@@ -117,7 +117,9 @@ class User {
   getHoursSleptByDate(date) {
       if(!date){
       date = this.sleepQualityRecord[0].date;
+      console.log("date", date)
     }
+    console.log("I am in sleep and here is the date-->", date)
     let valueNeeded = 0;
     this.sleepHoursRecord.forEach(item => {
       if (item.date === date)  {
