@@ -16,18 +16,6 @@ import fetchCalls from './apiCalls';
 import domUpdates from './domUpdates';
 
 
-// import activityData from './data/activity';
-
-// let defaultDate = new Date();
-// // console.log(defaultDate)
-// let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-// console.log("date here--->", currentDate)
-
-
-// let user ;
-// let todayDate = "2019/09/22";
-
-
 
 
 ///---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
@@ -107,7 +95,6 @@ function flipCard(cardToHide, cardToShow) {
 
 
 
-//////////////// DOM MANIPULATION ------------------------>
 function showDropdown() {
   userInfoDropdown.classList.toggle('hide');
 }
@@ -172,11 +159,12 @@ function showInfo() {
   }
 }
 
-
+//GLOBAL VARIABLES ---------------------------------------------------------
 let userRepository = new UserRepository();
 let todayDate = "2020/01/22";
 let user;
 
+//FETCH DATA FUNCTION ---------------------------------------------------------
 
 function fetchData() {
   const userInfo = fetchCalls.callFitLitData('users');
@@ -216,15 +204,13 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
 
   function updatePageInfo() {
-
     user = userRepository.users[0];
-
-    activityInformation(user, userRepository);
-    sleepInformation(user, userRepository);
-    userInformation(user);
+    updateActivityInformation(user, userRepository);
+    updateSleepInformation(user, userRepository);
+    updateUserInformation(user);
   }
 
-function activityInformation(user, userRepository) {
+function updateActivityInformation(user, userRepository) {
   const minActTodayInfo = user.findActivityInfoToday(user, todayDate).minutesActive;
   domUpdates.displayDomData(stepsInfoActiveMinutesToday, minActTodayInfo)
 
@@ -286,7 +272,7 @@ function activityInformation(user, userRepository) {
   });
 }
 
-function userInformation(user) {
+function updateUserInformation(user) {
   const userUpperCaseName = user.name.toUpperCase();
   domUpdates.displayDomData(dropdownName, userUpperCaseName);
 
@@ -397,7 +383,7 @@ function postActivityData(e) {
 
 
 
-function sleepInformation(user, userRepository) {
+function updateSleepInformation(user, userRepository) {
 
 sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
 
