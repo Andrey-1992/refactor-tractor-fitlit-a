@@ -99,11 +99,6 @@ profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
 
 
-function preventDefault() {
-  event.preventDefault()
-}
-
-
 function flipCard(cardToHide, cardToShow) {
   cardToHide.classList.add('hide');
   cardToShow.classList.remove('hide');
@@ -179,7 +174,7 @@ function showInfo() {
 
 let userRepository = new UserRepository();
 let todayDate = "2020/01/22";
-let user ;
+let user;
 
 
 function fetchData() {
@@ -304,12 +299,15 @@ function userInformation(user) {
   domUpdates.displayDomData(headerName, userFirstName);
 }
 
-document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
-  addSleep(e);
-})
+document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
+  if (e.target.classList.contains("sleep-submit")) {
+    addSleep(e);
+  }
+});
 
 function addSleep(e) {
-  e.preventDefault();
+  // e.preventDefault();
+  console.log("I am here")
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
   const formData = new FormData(e.target);
