@@ -87,7 +87,8 @@ let trendingStepsPhraseContainer = document.querySelector('.trending-steps-phras
 let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phrase-container');
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
-let hydrationDataEntry = document.querySelectorAll('.num-ounces-input');
+let hydrationPostEntry = document.querySelector('.num-ounces-input');
+let hydrationInfoEntry = document.querySelector('.add-num-ounces')
 
 // queries for DOM post request !
 let addNumSteps = document.querySelector('.add-num-steps');
@@ -98,6 +99,7 @@ let submitAtcvDataBtn = document.getElementById('submitAtcvData');
 mainPage.addEventListener('click', showInfo);
 profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
+hydrationPostEntry.addEventListener('click', postHydrationData);
 
 
 function flipCard(cardToHide, cardToShow) {
@@ -346,13 +348,20 @@ function postActivityData(e) {
   fetchData();
 }
 
-
-
-
-
-
-
-
+function postHydrationData(e) {
+  e.preventDefault();
+  let defaultDate = new Date();
+  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+  todayDate = currentDate;
+  const hydrationDataPost = parseInt(hydrationInfoEntry.value);
+  let postObject = {
+    userID: user.ID,
+    date: todayDate,
+    numOunces: hydrationDataPost
+  };
+  fetchCalls.postNewData('hydration', postObject);
+  fetchData();
+}
 
 function hydrationInformation(user, userRepository) {
   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
@@ -367,57 +376,10 @@ function hydrationInformation(user, userRepository) {
 for (var i = 0; i < dailyOz.length; i++) {
   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
 }
-
 hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
-console.log("hello");
-
-
 hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater(todayDate);
-
 hydrationInfoGlassesToday.innerText = userRepository.calculateAverageDailyWater(todayDate)/8;
-
-// }
-// function hydrationInformation(user, userRepository) {
-// for (var i = 0; i < dailyOz.length; i++) {
-//   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
-// }
-
-// hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
-// // Old Code
-// // hydrationUserOuncesToday.innerText = hydrationData.find(hydration => {
-// //   return hydration.userID === user.id && hydration.date === todayDate;
-// // }).numOunces;
-
-// hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater(todayDate);
-
-// //user class
-// hydrationInfoGlassesToday.innerText = hydrationData.find(hydration => {
-//   return hydration.userID === user.id && hydration.date === todayDate;
-// }).numOunces / 8;
-
-// //--------------------------------------------------------------------------
-// ///ERROR: scripts.js:179 ReferenceError: Cannot access 'sortedHydrationDataByDate' before initialization
-//   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
-//     if (Object.keys(a)[0] > Object.keys(b)[0]) {
-//       return -1;
-//     }
-//     if (Object.keys(a)[0] < Object.keys(b)[0]) {
-//       return 1;
-//     }
-//     return 0;
-//   });
-
 }
-
-
-//DOM ELEMENTS THAT ARE UPDATED PART 2 THAT NEED USER instantiated first!!***...
-///THESE FOR NOW NEED TO STAY HERE  -------------------
-
-// stairsTrendingButton.addEventListener('click', updateTrendingStairsDays());
-// stepsTrendingButton.addEventListener('click', updateTrendingStepDays());
-
-
-
 
 function sleepInformation(user, userRepository) {
 
