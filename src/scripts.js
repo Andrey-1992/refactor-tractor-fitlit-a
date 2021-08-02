@@ -12,10 +12,11 @@ import Activity from './Activity';
 import Hydration from './Hydration';
 import Sleep from './Sleep';
 import dayjs from 'dayjs';
+import fetchCalls from './apiCalls';
+import domUpdates from './domUpdates';
 
 
 // import activityData from './data/activity';
-import fetchCalls from './apiCalls';
 
 // let defaultDate = new Date();
 // // console.log(defaultDate)
@@ -98,11 +99,6 @@ profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
 
 
-function preventDefault() {
-  event.preventDefault()
-}
-
-
 function flipCard(cardToHide, cardToShow) {
   cardToHide.classList.add('hide');
   cardToShow.classList.remove('hide');
@@ -174,41 +170,12 @@ function showInfo() {
     flipCard(event.target.parentNode, sleepMainCard);
   }
 }
-//////////////// ------------------------------->
 
 
-//this holds all our users...* this is an important global variable right now.
 let userRepository = new UserRepository();
-
-//REFACTOR:NEW CHANGE: this date is not accurate
-
-
-
-// let defaultDate = new Date();
-// // console.log(defaultDate)
-// let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-// console.log("date here--->", currentDate)
-
-let todayDate;
-
-
-// default date--- last date in the array
-// on a post
-
-// 2019/09/22
-//2020/01/19
+let todayDate = "2020/01/22";
 let user;
-  // date should be last date in list.
-  // get rid of this global variable and add an argument to each method in user class that requires date
-   // // if(!date){
-    //   this.sleepQualityAverage[0].date;
-    // }
-//see calculateAverageHoursThisWeek(todayDate) as an example.
 
-
-
-////////////////// FETCH CALL ------------------------------------->
-// window.addEventListener("load", fetchData);
 
 function fetchData() {
   const userInfo = fetchCalls.callFitLitData('users');
@@ -219,15 +186,12 @@ function fetchData() {
   Promise.all([userInfo, activityInfo, hydrationInfo, sleepInfo])
   .then(data => initializedData(data[0], data[1], data[2], data[3]))
   .catch(err => console.error(err))
-
 }
 
 function initializedData(userData, activityData, hydrationData, sleepData) {
-  // starts a promise chain so that you can use .then.
   Promise.resolve(intializeUserData(userData)).then(storeUserData(activityData, hydrationData, sleepData)).then(updatePageInfo());
 }
 
-//STEP 1:
 function intializeUserData(userData) {
   userData.userData.forEach(user => {
     let userInstance = new User(user);
@@ -236,128 +200,73 @@ function intializeUserData(userData) {
 }
 
 fetchData();
-////////////////// FETCH CALLS -------------------------------->
 
-
-
-//This will then take the data from the api call data and AFTER the use repo is created with all of the user instances it can then store the user data on the user.
-
-//STEP 2
 function storeUserData (activityData, hydrationData, sleepData) {
-    // -------------------------------------->
-    // After that we had instantiated every element from the userData in a User class, we would update the properties relted of each instated user (.activityRecord, .accomplishedDays, .trendingStepDays ...) - Using this iteration will allow us to create an instances of every element from the activityData file and push it in the correct instantiated user ! ---->
-
     activityData.activityData.forEach(activity => {
      new Activity(activity, userRepository);
     });
-    //--------------------------------------->
-
-    // The same idea for this other two data sets ---------------->
     hydrationData.hydrationData.forEach(hydration => {
       new Hydration(hydration, userRepository);
     });
-
     sleepData.sleepData.forEach(sleep => {
       new Sleep(sleep, userRepository);
     });
-    // ----------------------------------------------------------->
   }
 
 
   function updatePageInfo() {
+
     user = userRepository.users[0];
 
     activityInformation(user, userRepository);
     sleepInformation(user, userRepository);
     userInformation(user);
-    //NEED to FIX hydration function here// this is why it currently does not show up on the page.. there is no function that calls it.
-    // hydrationInformation(user, userRepository);
   }
 
-
-
-  /////////// CREATE A NEW ACTIVITY POST REQUEST ------------------>
-
-  function postActivityData() {
-    // preventDefault(); ---> Is not longer nesseasry because I wanit to update !
-    // todayDate = currentDate;
-
-  let defaultDate = new Date();
-  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-
-  const numStepsInput = parseInt(addNumSteps.value);
-
-  const minActiveInput = parseInt(addMinActv.value);
-
-  const flightStairsInput = parseInt(addFlightStairs.value);
-
-  let user = userRepository.users[1];
-
-  let postObject = {
-     userID: user.id,
-     date: currentDate,
-     numSteps: numStepsInput,
-     minutesActive: minActiveInput,
-     flightsOfStairs: flightStairsInput
-    };
-  console.log('postObject', postObject)
-
-  fetchCalls.postNewData('activity', postObject);
-  fetchData();
-  }
-
-  //------------------------------------------------------------->
-
-
-
-///// This function will work when we implement the fetch calls for the - Iteration 5 || Activity class Info --------------------------------------->
 function activityInformation(user, userRepository) {
+  const minActTodayInfo = user.findActivityInfoToday(user, todayDate).minutesActive;
+  domUpdates.displayDomData(stepsInfoActiveMinutesToday, minActTodayInfo)
 
-  ///////// ACTIVITIES FOR TODAY ---------------->
-  stepsInfoActiveMinutesToday.innerText = user.findActivityInfoToday(user).minutesActive;
+  const stepsTodayInfo = user.findActivityInfoToday(user, todayDate).steps;
+  domUpdates.displayDomData(stepsUserStepsToday, stepsTodayInfo);
 
-  stepsUserStepsToday.innerText = user.findActivityInfoToday(user).steps;
+  const milesWalkedTodayInfo = user.findActivityInfoToday(user, todayDate).calculateMiles(userRepository);
+  domUpdates.displayDomData(stepsInfoMilesWalkedToday, milesWalkedTodayInfo);
 
-  stepsInfoMilesWalkedToday.innerText = user.findActivityInfoToday(user).calculateMiles(userRepository);
+  const flightsOfStairsTodayInfo = user.findActivityInfoToday(user, todayDate).flightsOfStairs;
+  domUpdates.displayDomData(stairsInfoFlightsToday, flightsOfStairsTodayInfo);
 
-  stairsInfoFlightsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs;
+  const stairsTodayInfo = user.findActivityInfoToday(user, todayDate).flightsOfStairs * 12;
+  domUpdates.displayDomData(stairsUserStairsToday, stairsTodayInfo);
 
-  stairsUserStairsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs * 12;
+  const actvAvgWeekInfo = user.calculateActivityAverageThisWeek('minutesActive', todayDate);
+  domUpdates.displayDomData(stepsCalendarTotalActiveMinutesWeekly, actvAvgWeekInfo);
 
+  const totalStepsThisWeekInfo = user.calculateActivityAverageThisWeek('steps', todayDate);
+  domUpdates.displayDomData(stepsCalendarTotalStepsWeekly, totalStepsThisWeekInfo);
 
+  const flightOfStairsAvgWeekInfo = user.calculateActivityAverageThisWeek('flightsOfStairs', todayDate);
+  domUpdates.displayDomData(stairsCalendarFlightsAverageWeekly, flightOfStairsAvgWeekInfo);
 
-  ///////// ACTIVITIES FOR WEEK -------------------->
-  stepsCalendarTotalActiveMinutesWeekly.innerText = user.calculateActivityAverageThisWeek('minutesActive')
-  // console.log(user.calculateActivityAverageThisWeek('minutesActive'))
+  const stairsAvgWeekInfo = (user.calculateActivityAverageThisWeek('flightsOfStairs', todayDate) * 12).toFixed(0);
+  domUpdates.displayDomData(stairsCalendarStairsAverageWeekly, stairsAvgWeekInfo);
 
+  const friendsAvgMinutesToday = userRepository.calculateAverages(user, 'minutesActive');
+  domUpdates.displayDomData(stepsFriendActiveMinutesAverageToday, friendsAvgMinutesToday);
 
-  stepsCalendarTotalStepsWeekly.innerText = user.calculateActivityAverageThisWeek('steps');
+  const friendsAvgStepsToday = userRepository.calculateAverages(user, 'steps');
+  domUpdates.displayDomData(stepsFriendStepsAverageToday, friendsAvgStepsToday);
 
-  stairsCalendarFlightsAverageWeekly.innerText = user.calculateActivityAverageThisWeek('flightsOfStairs');
+  const friendsTotalStepsToday = userRepository.calculateAverageStepGoal();
+  domUpdates.displayDomData(stepsFriendAverageStepGoal, friendsTotalStepsToday);
 
-  stairsCalendarStairsAverageWeekly.innerText =
-  (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
+  const friendsAvgStairsToday = (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
+  domUpdates.displayDomData(stairsFriendFlightsAverageToday, friendsAvgStairsToday);
 
-
-
-  ///////// ACTIVITIES AVERAGES -------------->
-  stepsFriendStepsAverageToday.innerText = userRepository.calculateAverages(user, 'steps');
-
-  stepsFriendActiveMinutesAverageToday.innerText =
-  userRepository.calculateAverages(user, 'minutesActive');
- // userRepository.calculateAverageMinutesActive();
-
-  stairsFriendFlightsAverageToday.innerText =
-  (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
-  // (userRepository.calculateAverageStairs() / 12).toFixed(1);
-
-  // Steps Goal from all friends:
-  stepsFriendAverageStepGoal.innerText = `${userRepository.calculateAverageStepGoal()}`;
-
-  // Where are we using this function ????
   user.findFriendsTotalStepsForWeek(userRepository.users, todayDate);
 
   user.friendsActivityRecords.forEach(friend => {
+
     dropdownFriendsStepsContainer.innerHTML += `
     <p class='dropdown-p friends-steps'>${friend.firstName} |  ${friend.totalWeeklySteps}</p>
     `;
@@ -374,33 +283,21 @@ function activityInformation(user, userRepository) {
       paragraph.classList.add('yellow-text');
     }
   });
-
 }
-  //////----------------------------------------------------------------->
 
-
-
-
-
-
-/// Function to make it work with the FETCH CALLS
-// - Iteration 1 || User Info --------------------------------------->
 function userInformation(user) {
+  const userUpperCaseName = user.name.toUpperCase();
+  domUpdates.displayDomData(dropdownName, userUpperCaseName);
 
-  dropdownGoal.innerText = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
+  const userGoalCard = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
+  domUpdates.displayDomData(dropdownGoal, userGoalCard);
 
-  dropdownEmail.innerText = `EMAIL | ${user.email}`;
+  const userEmailCard = `EMAIL | ${user.email}`;
+  domUpdates.displayDomData(dropdownEmail, userEmailCard);
 
-  dropdownName.innerText = user.name.toUpperCase();
-
-  headerName.innerText = `${user.getFirstName()}'S `;
+  const userFirstName = `${user.getFirstName()}'S `;
+  domUpdates.displayDomData(headerName, userFirstName);
 }
-// ------------------------------------------------------------------>
-
-
-
-///POST DATA FUNCTIONS ---------------------------------------
-//event listener
 
 document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
   if (e.target.classList.contains("sleep-submit")) {
@@ -413,50 +310,42 @@ function addSleep(e) {
   console.log("I am here")
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-  // todayDate = currentDate ;
   const formData = new FormData(e.target);
-
+  todayDate = currentDate;
   const sleepItem = {
     userID: user.id,
     date: currentDate,
     hoursSlept: formData.get('hoursSlept'),
     sleepQuality: formData.get('sleepQuality')
   }
-
-  addSleepItem(sleepItem);
+  fetchCalls.postNewData('sleep', sleepItem);
+  fetchData();
   e.target.reset();
 }
 
-function addSleepItem(sleepItem) {
-  fetch('http://localhost:3001/api/v1/sleep', {
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(sleepItem)
-  })
-  .then(response => {
-    checkForError(response)
-  })
-  .then(
-    fetchData()
-  )
-  .catch(err => {
-    console.log(err)
-    displayErrorMessage(err)
-  })
+
+function postActivityData(e) {
+  e.preventDefault();
+  let defaultDate = new Date();
+  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+  todayDate = currentDate;
+  const numStepsInput = parseInt(addNumSteps.value);
+  const minActiveInput = parseInt(addMinActv.value);
+  const flightStairsInput = parseInt(addFlightStairs.value);
+
+  let postObject = {
+    userID: user.id,
+    date: todayDate,
+    numSteps: numStepsInput,
+    minutesActive: minActiveInput,
+    flightsOfStairs: flightStairsInput
+  };
+  fetchCalls.postNewData('activity', postObject);
+  fetchData();
 }
 
-function checkForError(response) {
-  if (!response.ok) {
-    throw new Error ('Please make sure all fields are selected.')
-  } else {
-    return response.json();
-  }
-}
 
-function displayErrorMessage(err) {
-  const errorField = document.querySelector('.js-error');
-  errorField.innerHTML = `${err} -Please check back later.`
-}
+
 
 
 
@@ -507,7 +396,6 @@ function displayErrorMessage(err) {
 
 
 
-////////////// SLEPT FUNCTIONALITY ------------------------->
 function sleepInformation(user, userRepository) {
 
 sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
@@ -517,7 +405,7 @@ sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWe
 // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
 //   return user.id === userRepository.getLongestSleepers(todayDate)
 // }).getFirstName();
-
+//
 // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
 //   return user.id === userRepository.getWorstSleepers(todayDate)
 // }).getFirstName();
@@ -534,39 +422,26 @@ sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
 
 
 
-
-
-
-
-
-
-
-//DOM ELEMENTS THAT ARE UPDATED PART 2 THAT NEED USER instantiated first!!***...
-///THESE FOR NOW NEED TO STAY HERE  -------------------
-
-// stairsTrendingButton.addEventListener('click', updateTrendingStairsDays());
-// stepsTrendingButton.addEventListener('click', updateTrendingStepDays());
-
-
-//////////////////////// -  ACTIVITY -  EVENT LISTENERS ////////////////////
-
 function updateTrendingStairsDays() {
   user.findTrendingStairsDays();
-  trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
+  let trendingStairs = user.trendingStairsDays[0];
+  domUpdates.updateTrendingDates(trendingStairsPhraseContainer, trendingStairs);
 }
 
 function updateTrendingStepDays() {
   user.findTrendingStepDays();
-  trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
+  let trendingSteps = user.trendingStepDays[0];
+  domUpdates.updateTrendingDates(trendingStepsPhraseContainer, trendingSteps);
 }
 
 stairsTrendingButton.addEventListener('click', function () {
   user.findTrendingStairsDays();
-  trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
+  let trendingStairsDays = user.user.trendingStairsDays[0];
+  domUpdates.updateTrendingDates(trendingStairsPhraseContainer, trendingStairsDays);
 });
 
 stepsTrendingButton.addEventListener('click', function () {
   user.findTrendingStepDays();
-  trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
+  let trendingStepsDays = user.trendingStepDays[0];
+  domUpdates.updateTrendingDates(trendingStepsPhraseContainer, trendingStepsDays);
 });
-///////////////////////////////////////////////////////////////
