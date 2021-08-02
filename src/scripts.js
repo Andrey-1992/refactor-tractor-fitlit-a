@@ -79,6 +79,7 @@ submitAtcvDataBtn.addEventListener('click', postActivityData);
 document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
   addSleep(e)
 });
+window.addEventListener("load", fetchData());
 
 
 ///------------------GLOBAL VARIABLES------------------------///
@@ -176,8 +177,6 @@ function intializeUserData(userData) {
   })
 }
 
-fetchData();
-
 function storeUserData (activityData, hydrationData, sleepData) {
   activityData.activityData.forEach(activity => {
     new Activity(activity, userRepository);
@@ -189,7 +188,6 @@ function storeUserData (activityData, hydrationData, sleepData) {
     new Sleep(sleep, userRepository);
   });
 }
-
 
 function updatePageInfo() {
   user = userRepository.users[0];
@@ -274,27 +272,7 @@ function updateUserInformation(user) {
   domUpdates.displayDomData(headerName, userFirstName);
 }
 
-
-
-// function addSleep(e) {
-//   e.preventDefault();
-//   let defaultDate = new Date();
-//   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-//   const formData = new FormData(e.target);
-//   todayDate = currentDate;
-
-//   const sleepItem = {
-//     userID: user.id,
-//     date: currentDate,
-//     hoursSlept: formData.get('hoursSlept'),
-//     sleepQuality: formData.get('sleepQuality')
-//   }
-
-//   fetchCalls.postNewData('sleep', sleepItem);
-//   fetchData();
-//   e.target.reset();
-// }
-
+///------------------POST DATA FUNCTIONS------------------------///
 function addSleep(e) {
   e.preventDefault();
   let defaultDate = new Date();
@@ -307,12 +285,10 @@ function addSleep(e) {
     hoursSlept: formData.get('hoursSlept'),
     sleepQuality: formData.get('sleepQuality')
   }
-  console.log(sleepItem)
   fetchCalls.postNewData('sleep', sleepItem);
   fetchData();
   e.target.reset();
 }
-
 
 function postActivityData(e) {
   e.preventDefault();
@@ -330,10 +306,18 @@ function postActivityData(e) {
     minutesActive: minActiveInput,
     flightsOfStairs: flightStairsInput
   };
-  console.log(postObject)
   fetchCalls.postNewData('activity', postObject);
   fetchData();
 }
+
+
+
+
+
+
+
+
+
 
 
 
