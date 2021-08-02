@@ -180,6 +180,8 @@ function showInfo() {
 
 //this holds all our users...* this is an important global variable right now.
 let userRepository = new UserRepository();
+let todayDate = "2020/01/22";
+let user;
 
 //REFACTOR:NEW CHANGE: this date is not accurate
 
@@ -190,7 +192,6 @@ let userRepository = new UserRepository();
 // let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
 // console.log("date here--->", currentDate)
 
-let todayDate = "2019/09/22";
 
 
 // default date--- last date in the array
@@ -198,7 +199,6 @@ let todayDate = "2019/09/22";
 
 // 2019/09/22
 //2020/01/19
-let user;
   // date should be last date in list.
   // get rid of this global variable and add an argument to each method in user class that requires date
    // // if(!date){
@@ -282,11 +282,11 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
   /////////// CREATE A NEW ACTIVITY POST REQUEST ------------------>
 
-  function postActivityData() {
+  function postActivityData(e) {
     // preventDefault(); ---> Is not longer nesseasry because I wanit to update !
     // todayDate = currentDate;
     // let user = userRepository.users[1];
-
+  e.preventDefault();
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
 
@@ -307,13 +307,12 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
   fetchCalls.postNewData('activity', postObject);
   fetchData();
+   e.target.reset();
   }
 
   //------------------------------------------------------------->
 
 
-
-///// This function will work when we implement the fetch calls for the - Iteration 5 || Activity class Info --------------------------------------->
 function activityInformation(user, userRepository) {
 
   ///////// ACTIVITIES FOR TODAY ---------------->
@@ -447,57 +446,40 @@ document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
   addSleep(e);
 })
 
+
+// ----------------->
+// function checkForError(response) {
+//   if (!response.ok) {
+//     throw new Error ('Please make sure all fields are selected.')
+//   } else {
+//     return response.json();
+//   }
+// }
+//
+// function displayErrorMessage(err) {
+//   const errorField = document.querySelector('.js-error');
+//   errorField.innerHTML = `${err} -Please check back later.`
+// }
+
+
+
+
 function addSleep(e) {
-  e.preventDefault();
-  let defaultDate = new Date();
-  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-  todayDate = currentDate ;
-  const formData = new FormData(e.target);
-
-  console.log(formData.get('hoursSlept'));
-
-  const sleepItem = {
-    userID: user.id,
-    date: currentDate,
-    hoursSlept: formData.get('hoursSlept'),
-    sleepQuality: formData.get('sleepQuality')
-  }
-
-  addSleepItem(sleepItem);
-  e.target.reset();
+ e.preventDefault();
+ let defaultDate = new Date();
+ let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+ const formData = new FormData(e.target);
+ todayDate = currentDate;
+ const sleepItem = {
+   userID: user.id,
+   date: currentDate,
+   hoursSlept: formData.get('hoursSlept'),
+   sleepQuality: formData.get('sleepQuality')
+ }
+ fetchCalls.postNewData('sleep', sleepItem);
+ fetchData();
+ e.target.reset();
 }
-
-function addSleepItem(sleepItem) {
-  fetch('http://localhost:3001/api/v1/sleep', {
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(sleepItem)
-  })
-  .then(response => {
-    checkForError(response)
-  })
-  .then(
-    fetchData()
-  )
-  .catch(err => {
-    console.log(err)
-    displayErrorMessage(err)
-  })
-}
-
-function checkForError(response) {
-  if (!response.ok) {
-    throw new Error ('Please make sure all fields are selected.')
-  } else {
-    return response.json();
-  }
-}
-
-function displayErrorMessage(err) {
-  const errorField = document.querySelector('.js-error');
-  errorField.innerHTML = `${err} -Please check back later.`
-}
-
 
 
 
