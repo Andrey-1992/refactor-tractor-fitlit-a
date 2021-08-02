@@ -1,11 +1,5 @@
 import './css/base.scss';
 import './css/styles.scss';
-
-// import userData from './data/users';
-// import sleepData from './data/sleep';
-import hydrationData from './data/hydration';
-import HydrationRepo from './hydrationRepo'
-import SleepRepo from './SleepRepo.js'
 import UserRepository from './UserRepository';
 import User from './User';
 import Activity from './Activity';
@@ -15,10 +9,7 @@ import dayjs from 'dayjs';
 import fetchCalls from './apiCalls';
 import domUpdates from './domUpdates';
 
-
-
-
-///---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
+///------------------QUERY SELECTORS ------------------------///
 let dailyOz = document.querySelectorAll('.daily-oz');
 let dropdownEmail = document.querySelector('#dropdown-email');
 let dropdownFriendsStepsContainer = document.querySelector('#dropdown-friends-steps-container');
@@ -76,16 +67,24 @@ let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phr
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
 let hydrationDataEntry = document.querySelectorAll('.num-ounces-input');
-
-// queries for DOM post request !
 let addNumSteps = document.querySelector('.add-num-steps');
 let addMinActv = document.querySelector('.add-min-actv');
 let addFlightStairs = document.querySelector('.add-flight-stairs');
 let submitAtcvDataBtn = document.getElementById('submitAtcvData');
 
+///------------------EVENT LISTENERS------------------------///
 mainPage.addEventListener('click', showInfo);
 profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
+document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
+  addSleep(e)
+});
+
+
+///------------------GLOBAL VARIABLES------------------------///
+let userRepository = new UserRepository();
+let todayDate = "2020/01/22";
+let user;
 
 
 function flipCard(cardToHide, cardToShow) {
@@ -93,15 +92,10 @@ function flipCard(cardToHide, cardToShow) {
   cardToShow.classList.remove('hide');
 }
 
-
-
 function showDropdown() {
   userInfoDropdown.classList.toggle('hide');
 }
 
-
-// switch statement
-// needs a different target.
 function showInfo() {
   if (event.target.classList.contains('steps-info-button')) {
     flipCard(stepsMainCard, stepsInfoCard);
@@ -159,13 +153,7 @@ function showInfo() {
   }
 }
 
-//GLOBAL VARIABLES ---------------------------------------------------------
-let userRepository = new UserRepository();
-let todayDate = "2020/01/22";
-let user;
-
-//FETCH DATA FUNCTION ---------------------------------------------------------
-
+///------------------FETCH DATA FUNCTIONS------------------------///
 function fetchData() {
   const userInfo = fetchCalls.callFitLitData('users');
   const activityInfo = fetchCalls.callFitLitData('activity');
@@ -173,8 +161,8 @@ function fetchData() {
   const sleepInfo = fetchCalls.callFitLitData('sleep');
 
   Promise.all([userInfo, activityInfo, hydrationInfo, sleepInfo])
-  .then(data => initializedData(data[0], data[1], data[2], data[3]))
-  .catch(err => console.error(err))
+    .then(data => initializedData(data[0], data[1], data[2], data[3]))
+    .catch(err => console.error(err))
 }
 
 function initializedData(userData, activityData, hydrationData, sleepData) {
@@ -191,24 +179,24 @@ function intializeUserData(userData) {
 fetchData();
 
 function storeUserData (activityData, hydrationData, sleepData) {
-    activityData.activityData.forEach(activity => {
-     new Activity(activity, userRepository);
-    });
-    hydrationData.hydrationData.forEach(hydration => {
-      new Hydration(hydration, userRepository);
-    });
-    sleepData.sleepData.forEach(sleep => {
-      new Sleep(sleep, userRepository);
-    });
-  }
+  activityData.activityData.forEach(activity => {
+    new Activity(activity, userRepository);
+  });
+  hydrationData.hydrationData.forEach(hydration => {
+    new Hydration(hydration, userRepository);
+  });
+  sleepData.sleepData.forEach(sleep => {
+    new Sleep(sleep, userRepository);
+  });
+}
 
 
-  function updatePageInfo() {
-    user = userRepository.users[0];
-    updateActivityInformation(user, userRepository);
-    updateSleepInformation(user, userRepository);
-    updateUserInformation(user);
-  }
+function updatePageInfo() {
+  user = userRepository.users[0];
+  updateActivityInformation(user, userRepository);
+  updateSleepInformation(user, userRepository);
+  updateUserInformation(user);
+}
 
 function updateActivityInformation(user, userRepository) {
   const minActTodayInfo = user.findActivityInfoToday(user, todayDate).minutesActive;
@@ -286,15 +274,29 @@ function updateUserInformation(user) {
   domUpdates.displayDomData(headerName, userFirstName);
 }
 
-document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
-  if (e.target.classList.contains("sleep-submit")) {
-    addSleep(e);
-  }
-});
+
+
+// function addSleep(e) {
+//   e.preventDefault();
+//   let defaultDate = new Date();
+//   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+//   const formData = new FormData(e.target);
+//   todayDate = currentDate;
+
+//   const sleepItem = {
+//     userID: user.id,
+//     date: currentDate,
+//     hoursSlept: formData.get('hoursSlept'),
+//     sleepQuality: formData.get('sleepQuality')
+//   }
+
+//   fetchCalls.postNewData('sleep', sleepItem);
+//   fetchData();
+//   e.target.reset();
+// }
 
 function addSleep(e) {
-  // e.preventDefault();
-  console.log("I am here")
+  e.preventDefault();
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
   const formData = new FormData(e.target);
@@ -305,6 +307,7 @@ function addSleep(e) {
     hoursSlept: formData.get('hoursSlept'),
     sleepQuality: formData.get('sleepQuality')
   }
+  console.log(sleepItem)
   fetchCalls.postNewData('sleep', sleepItem);
   fetchData();
   e.target.reset();
@@ -327,6 +330,7 @@ function postActivityData(e) {
     minutesActive: minActiveInput,
     flightsOfStairs: flightStairsInput
   };
+  console.log(postObject)
   fetchCalls.postNewData('activity', postObject);
   fetchData();
 }
@@ -385,25 +389,25 @@ function postActivityData(e) {
 
 function updateSleepInformation(user, userRepository) {
 
-sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
+  sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
 
-sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
+  sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-// sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getLongestSleepers(todayDate)
-// }).getFirstName();
-//
-// sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getWorstSleepers(todayDate)
-// }).getFirstName();
+  // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getLongestSleepers(todayDate)
+  // }).getFirstName();
+  //
+  // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getWorstSleepers(todayDate)
+  // }).getFirstName();
 
-sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
+  sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
-sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
+  sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
 
-sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
+  sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
 
-sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
+  sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
 
 }
 
