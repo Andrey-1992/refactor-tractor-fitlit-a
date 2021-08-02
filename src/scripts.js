@@ -269,7 +269,11 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
 
   function updatePageInfo() {
-    user = userRepository.users[0];
+// <<<<<<< refactor/activity-class
+//     let user = userRepository.users[0];
+// =======
+//     user = userRepository.users[0];
+// >>>>>>> main
 
     activityInformation(user, userRepository);
     sleepInformation(user, userRepository);
@@ -464,10 +468,26 @@ function displayErrorMessage(err) {
 ///PUT ALL OF THIS IN A FUNCTION TO CALL IN DISPLAY INFO AFTER API CALL MADE.
 ///TO DO: ... Move INTO USER CLASSS AND WRAP HYDRATION INFORMATION FUNCTION AROUND IT TO MATCH OTHERS. ----------------------------------------------------
 
+// <<<<<<< refactor/activity-class
 // function hydrationInformation(user, userRepository) {
+//   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
+//     if (Object.keys(a)[0] > Object.keys(b)[0]) {
+//       return -1;
+//     }
+//     if (Object.keys(a)[0] < Object.keys(b)[0]) {
+//       return 1;
+//     }
+//     return 0;
+//   });
 // for (var i = 0; i < dailyOz.length; i++) {
 //   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
 // }
+// =======
+// // function hydrationInformation(user, userRepository) {
+// // for (var i = 0; i < dailyOz.length; i++) {
+// //   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
+// // }
+// >>>>>>> main
 
 // hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
 // // Old Code
@@ -482,17 +502,6 @@ function displayErrorMessage(err) {
 //   return hydration.userID === user.id && hydration.date === todayDate;
 // }).numOunces / 8;
 
-// //--------------------------------------------------------------------------
-// ///ERROR: scripts.js:179 ReferenceError: Cannot access 'sortedHydrationDataByDate' before initialization
-//   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
-//     if (Object.keys(a)[0] > Object.keys(b)[0]) {
-//       return -1;
-//     }
-//     if (Object.keys(a)[0] < Object.keys(b)[0]) {
-//       return 1;
-//     }
-//     return 0;
-//   });
 
 // }
 
