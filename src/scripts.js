@@ -317,45 +317,72 @@ function storeUserData (activityData, hydrationData, sleepData) {
 function activityInformation(user, userRepository) {
 
   ///////// ACTIVITIES FOR TODAY ---------------->
-  stepsInfoActiveMinutesToday.innerText = user.findActivityInfoToday(user).minutesActive;
 
-  stepsUserStepsToday.innerText = user.findActivityInfoToday(user).steps;
+  const minActTodayInfo = user.findActivityInfoToday(user).minutesActive;
+  domUpdates.domActToday(stepsInfoActiveMinutesToday, minActTodayInfo)
+  // stepsInfoActiveMinutesToday.innerText = user.findActivityInfoToday(user).minutesActive;
 
-  stepsInfoMilesWalkedToday.innerText = user.findActivityInfoToday(user).calculateMiles(userRepository);
+  const stepsTodayInfo = user.findActivityInfoToday(user).steps;
+  domUpdates.domActToday(stepsUserStepsToday, stepsTodayInfo);
+  // stepsUserStepsToday.innerText = user.findActivityInfoToday(user).steps;
 
-  stairsInfoFlightsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs;
+  const milesWalkedTodayInfo = user.findActivityInfoToday(user).calculateMiles(userRepository);
+  domUpdates.domActToday(stepsInfoMilesWalkedToday, milesWalkedTodayInfo);
+  // stepsInfoMilesWalkedToday.innerText = user.findActivityInfoToday(user).calculateMiles(userRepository);
 
-  stairsUserStairsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs * 12;
+  const flightsOfStairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs;
+  domUpdates.domActToday(stairsInfoFlightsToday, flightsOfStairsTodayInfo);
+  // stairsInfoFlightsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs;
+
+
+  const stairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs * 12;
+  domUpdates.domActToday(stairsUserStairsToday, stairsTodayInfo);
+  // stairsUserStairsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs * 12;
 
 
 
   ///////// ACTIVITIES FOR WEEK -------------------->
-  stepsCalendarTotalActiveMinutesWeekly.innerText = user.calculateActivityAverageThisWeek('minutesActive')
-  // console.log(user.calculateActivityAverageThisWeek('minutesActive'))
+  const actvAvgWeekInfo = user.calculateActivityAverageThisWeek('minutesActive');
+  domUpdates.domActToday(stepsCalendarTotalActiveMinutesWeekly, actvAvgWeekInfo);
+  // stepsCalendarTotalActiveMinutesWeekly.innerText = user.calculateActivityAverageThisWeek('minutesActive')
 
+  const totalStepsThisWeekInfo = user.calculateActivityAverageThisWeek('steps');
+  domUpdates.domActToday(stepsCalendarTotalStepsWeekly, totalStepsThisWeekInfo);
+  // stepsCalendarTotalStepsWeekly.innerText = user.calculateActivityAverageThisWeek('steps');
 
-  stepsCalendarTotalStepsWeekly.innerText = user.calculateActivityAverageThisWeek('steps');
+  const flightOfStairsAvgWeekInfo = user.calculateActivityAverageThisWeek('flightsOfStairs');
+  domUpdates.domActToday(stairsCalendarFlightsAverageWeekly, flightOfStairsAvgWeekInfo);
+  // stairsCalendarFlightsAverageWeekly.innerText = user.calculateActivityAverageThisWeek('flightsOfStairs');
 
-  stairsCalendarFlightsAverageWeekly.innerText = user.calculateActivityAverageThisWeek('flightsOfStairs');
-
-  stairsCalendarStairsAverageWeekly.innerText =
-  (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
+  const stairsAvgWeekInfo = (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
+  domUpdates.domActToday(stairsCalendarStairsAverageWeekly, stairsAvgWeekInfo);
+  // stairsCalendarStairsAverageWeekly.innerText =
+  // (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
 
 
 
   ///////// ACTIVITIES AVERAGES -------------->
-  stepsFriendStepsAverageToday.innerText = userRepository.calculateAverages(user, 'steps');
+  const friendsAvgMinutesToday = userRepository.calculateAverages(user, 'minutesActive');
+  domUpdates.domActToday(stepsFriendActiveMinutesAverageToday, friendsAvgMinutesToday);
+  // stepsFriendActiveMinutesAverageToday.innerText =
+  // userRepository.calculateAverages(user, 'minutesActive');
+  // userRepository.calculateAverageMinutesActive();
 
-  stepsFriendActiveMinutesAverageToday.innerText =
-  userRepository.calculateAverages(user, 'minutesActive');
- // userRepository.calculateAverageMinutesActive();
-
-  stairsFriendFlightsAverageToday.innerText =
-  (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
-  // (userRepository.calculateAverageStairs() / 12).toFixed(1);
+  const friendsAvgStepsToday = userRepository.calculateAverages(user, 'steps');
+  domUpdates.domActToday(stepsFriendStepsAverageToday, friendsAvgStepsToday);
+  // stepsFriendStepsAverageToday.innerText = userRepository.calculateAverages(user, 'steps');
 
   // Steps Goal from all friends:
-  stepsFriendAverageStepGoal.innerText = `${userRepository.calculateAverageStepGoal()}`;
+  const friendsTotalStepsToday = userRepository.calculateAverageStepGoal();
+  domUpdates.domActToday(stepsFriendAverageStepGoal, friendsTotalStepsToday);
+  // stepsFriendAverageStepGoal.innerText = `${userRepository.calculateAverageStepGoal()}`;
+
+  const friendsAvgStairsToday = (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
+  domUpdates.domActToday(stairsFriendFlightsAverageToday, friendsAvgStairsToday);
+  // stairsFriendFlightsAverageToday.innerText =
+  // (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
+  // (userRepository.calculateAverageStairs() / 12).toFixed(1);
+
 
   // Where are we using this function ????
   user.findFriendsTotalStepsForWeek(userRepository.users, todayDate);
