@@ -27,9 +27,6 @@ class User {
     return names[0].toUpperCase();
   }
 
-  ////////////////////////  - HYDRATION METHODS - ////////////////////////
-  ///REFACTOR LN 201 SCRIPTS.JS
-  //THIS METHOD RETURNS the ounces of water drank on one day for one user.
   getOuncesByDate(date) {
     let valueNeeded = 0;
     this.ouncesRecord.forEach(item => {
@@ -61,7 +58,6 @@ class User {
     }, 0)
   }
 
-  ////////////////////////  - SLEEP METHODS - ////////////////////////
   updateSleep(date, hours, quality) {
     this.sleepHoursRecord.unshift({
       'date': date,
@@ -127,12 +123,6 @@ class User {
     return valueNeeded;
   }
 
-
-
-
-
-
-  ////////////////////////  - ACTIVITY MEHTODS - ////////////////////////
   updateActivities(activity) {
     this.activityRecord.unshift(activity);
     if (activity.numSteps >= this.dailyStepGoal) {
@@ -141,15 +131,11 @@ class User {
   }
 
   findActivityInfoToday(user, todayDate) {
-    // let todayDate = this.activityRecord[0].date;
-
     return this.activityRecord.find(activity =>
       activity.userId === user.id && activity.date === todayDate);
   }
 
   calculateActivityAverageThisWeek(activityType, todayDate) {
-    // let todayDate = this.activityRecord[0].date;
-
     return (this.activityRecord.reduce((sum, activity) => {
       let index = this.activityRecord.indexOf(this.activityRecord.find(activity => activity.date === todayDate));
       if (index <= this.activityRecord.indexOf(activity) && this.activityRecord.indexOf(activity) <= (index + 6)) {

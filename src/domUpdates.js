@@ -1,7 +1,5 @@
 const domUpdates = {
 
-  // ACTIVITY CLASS - DOM UPDATES SECTION ---------->
-
   displayDomData(todayActDomSection, actInfoData) {
     todayActDomSection.innerText = '';
     todayActDomSection.innerText = actInfoData;
@@ -22,11 +20,6 @@ const domUpdates = {
     <p class='trend-line'>${activityDaysInfo}</p>
     `
   }
-
-  // ---------------------------------------------------->
-
-
-
 
 }
 

@@ -5,7 +5,6 @@ const fetchCalls = {
       .then(response => response.json())
       .then(data => data)
       .catch((error) => this.displayErrorMessage(error));
-      // .catch(err => console.error(err))
   },
 
   postNewData(endPoint, body) {
@@ -16,8 +15,6 @@ const fetchCalls = {
       },
       body: JSON.stringify(body),
     })
-      // .then(response => response.json())
-      // .then(confirmation => console.log("this is the new object that have been POSTED:", confirmation));
     .then((res) => this.checkForErrors(res))
     .catch((error) => this.displayErrorMessage(error, endPoint));
   },
@@ -30,10 +27,7 @@ const fetchCalls = {
   },
 
   displayErrorMessage(error, endPoint) {
-  // Activity error SECTION
-  console.log('POST endPoint:', endPoint);
   const postErrorActivity = document.querySelector(".post-error-activity");
-  // Sleep error section
   const errorField = document.querySelector('.js-error');
 
     if (endPoint === 'activity') {
