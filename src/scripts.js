@@ -319,43 +319,43 @@ function activityInformation(user, userRepository) {
   ///////// ACTIVITIES FOR TODAY ---------------->
 
   const minActTodayInfo = user.findActivityInfoToday(user).minutesActive;
-  domUpdates.activityInfoDom(stepsInfoActiveMinutesToday, minActTodayInfo)
+  domUpdates.displayDomData(stepsInfoActiveMinutesToday, minActTodayInfo)
   // stepsInfoActiveMinutesToday.innerText = user.findActivityInfoToday(user).minutesActive;
 
   const stepsTodayInfo = user.findActivityInfoToday(user).steps;
-  domUpdates.activityInfoDom(stepsUserStepsToday, stepsTodayInfo);
+  domUpdates.displayDomData(stepsUserStepsToday, stepsTodayInfo);
   // stepsUserStepsToday.innerText = user.findActivityInfoToday(user).steps;
 
   const milesWalkedTodayInfo = user.findActivityInfoToday(user).calculateMiles(userRepository);
-  domUpdates.activityInfoDom(stepsInfoMilesWalkedToday, milesWalkedTodayInfo);
+  domUpdates.displayDomData(stepsInfoMilesWalkedToday, milesWalkedTodayInfo);
   // stepsInfoMilesWalkedToday.innerText = user.findActivityInfoToday(user).calculateMiles(userRepository);
 
   const flightsOfStairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs;
-  domUpdates.activityInfoDom(stairsInfoFlightsToday, flightsOfStairsTodayInfo);
+  domUpdates.displayDomData(stairsInfoFlightsToday, flightsOfStairsTodayInfo);
   // stairsInfoFlightsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs;
 
 
   const stairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs * 12;
-  domUpdates.activityInfoDom(stairsUserStairsToday, stairsTodayInfo);
+  domUpdates.displayDomData(stairsUserStairsToday, stairsTodayInfo);
   // stairsUserStairsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs * 12;
 
 
 
   ///////// ACTIVITIES FOR WEEK -------------------->
   const actvAvgWeekInfo = user.calculateActivityAverageThisWeek('minutesActive');
-  domUpdates.activityInfoDom(stepsCalendarTotalActiveMinutesWeekly, actvAvgWeekInfo);
+  domUpdates.displayDomData(stepsCalendarTotalActiveMinutesWeekly, actvAvgWeekInfo);
   // stepsCalendarTotalActiveMinutesWeekly.innerText = user.calculateActivityAverageThisWeek('minutesActive')
 
   const totalStepsThisWeekInfo = user.calculateActivityAverageThisWeek('steps');
-  domUpdates.activityInfoDom(stepsCalendarTotalStepsWeekly, totalStepsThisWeekInfo);
+  domUpdates.displayDomData(stepsCalendarTotalStepsWeekly, totalStepsThisWeekInfo);
   // stepsCalendarTotalStepsWeekly.innerText = user.calculateActivityAverageThisWeek('steps');
 
   const flightOfStairsAvgWeekInfo = user.calculateActivityAverageThisWeek('flightsOfStairs');
-  domUpdates.activityInfoDom(stairsCalendarFlightsAverageWeekly, flightOfStairsAvgWeekInfo);
+  domUpdates.displayDomData(stairsCalendarFlightsAverageWeekly, flightOfStairsAvgWeekInfo);
   // stairsCalendarFlightsAverageWeekly.innerText = user.calculateActivityAverageThisWeek('flightsOfStairs');
 
   const stairsAvgWeekInfo = (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
-  domUpdates.activityInfoDom(stairsCalendarStairsAverageWeekly, stairsAvgWeekInfo);
+  domUpdates.displayDomData(stairsCalendarStairsAverageWeekly, stairsAvgWeekInfo);
   // stairsCalendarStairsAverageWeekly.innerText =
   // (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
 
@@ -363,22 +363,22 @@ function activityInformation(user, userRepository) {
 
   ///////// ACTIVITIES AVERAGES -------------->
   const friendsAvgMinutesToday = userRepository.calculateAverages(user, 'minutesActive');
-  domUpdates.activityInfoDom(stepsFriendActiveMinutesAverageToday, friendsAvgMinutesToday);
+  domUpdates.displayDomData(stepsFriendActiveMinutesAverageToday, friendsAvgMinutesToday);
   // stepsFriendActiveMinutesAverageToday.innerText =
   // userRepository.calculateAverages(user, 'minutesActive');
   // userRepository.calculateAverageMinutesActive();
 
   const friendsAvgStepsToday = userRepository.calculateAverages(user, 'steps');
-  domUpdates.activityInfoDom(stepsFriendStepsAverageToday, friendsAvgStepsToday);
+  domUpdates.displayDomData(stepsFriendStepsAverageToday, friendsAvgStepsToday);
   // stepsFriendStepsAverageToday.innerText = userRepository.calculateAverages(user, 'steps');
 
   // Steps Goal from all friends:
   const friendsTotalStepsToday = userRepository.calculateAverageStepGoal();
-  domUpdates.activityInfoDom(stepsFriendAverageStepGoal, friendsTotalStepsToday);
+  domUpdates.displayDomData(stepsFriendAverageStepGoal, friendsTotalStepsToday);
   // stepsFriendAverageStepGoal.innerText = `${userRepository.calculateAverageStepGoal()}`;
 
   const friendsAvgStairsToday = (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
-  domUpdates.activityInfoDom(stairsFriendFlightsAverageToday, friendsAvgStairsToday);
+  domUpdates.displayDomData(stairsFriendFlightsAverageToday, friendsAvgStairsToday);
   // stairsFriendFlightsAverageToday.innerText =
   // (userRepository.calculateAverages(user, 'flightsOfStairs') / 12).toFixed(1);
   // (userRepository.calculateAverageStairs() / 12).toFixed(1);
@@ -388,6 +388,10 @@ function activityInformation(user, userRepository) {
   user.findFriendsTotalStepsForWeek(userRepository.users, todayDate);
 
   user.friendsActivityRecords.forEach(friend => {
+    // let friendName = friend.firstName;
+    // let friendSteps = friend.totalWeeklySteps;
+    // domUpdates.displayDomFriendsData(dropdownFriendsStepsContainer, friendName, friendSteps)
+
     dropdownFriendsStepsContainer.innerHTML += `
     <p class='dropdown-p friends-steps'>${friend.firstName} |  ${friend.totalWeeklySteps}</p>
     `;
@@ -416,14 +420,21 @@ function activityInformation(user, userRepository) {
 /// Function to make it work with the FETCH CALLS
 // - Iteration 1 || User Info --------------------------------------->
 function userInformation(user) {
+  const userUpperCaseName = user.name.toUpperCase();
+  domUpdates.displayDomData(dropdownName, userUpperCaseName);
+  // dropdownName.innerText = user.name.toUpperCase();
 
-  dropdownGoal.innerText = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
+  const userGoalCard = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
+  domUpdates.displayDomData(dropdownGoal, userGoalCard);
+  // dropdownGoal.innerText = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
 
-  dropdownEmail.innerText = `EMAIL | ${user.email}`;
+  const userEmailCard = `EMAIL | ${user.email}`;
+  domUpdates.displayDomData(dropdownEmail, userEmailCard);
+  // dropdownEmail.innerText = `EMAIL | ${user.email}`;
 
-  dropdownName.innerText = user.name.toUpperCase();
-
-  headerName.innerText = `${user.getFirstName()}'S `;
+  const userFirstName = `${user.getFirstName()}'S `;
+  domUpdates.displayDomData(headerName, userFirstName);
+  // headerName.innerText = `${user.getFirstName()}'S `;
 }
 // ------------------------------------------------------------------>
 
@@ -581,21 +592,29 @@ sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
 
 function updateTrendingStairsDays() {
   user.findTrendingStairsDays();
-  trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
+  let trendingStairs = user.trendingStairsDays[0];
+  domUpdates.updateTrendingDates(trendingStairsPhraseContainer, trendingStairs);
+  // trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
 }
 
 function updateTrendingStepDays() {
   user.findTrendingStepDays();
-  trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
+  let trendingSteps = user.trendingStepDays[0];
+  domUpdates.updateTrendingDates(trendingStepsPhraseContainer, trendingSteps);
+  // trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
 }
 
 stairsTrendingButton.addEventListener('click', function () {
   user.findTrendingStairsDays();
-  trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
+  let trendingStairsDays = user.user.trendingStairsDays[0];
+  domUpdates.updateTrendingDates(trendingStairsPhraseContainer, trendingStairsDays);
+  // trendingStairsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStairsDays[0]}</p>`;
 });
 
 stepsTrendingButton.addEventListener('click', function () {
   user.findTrendingStepDays();
-  trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
+  let trendingStepsDays = user.trendingStepDays[0];
+  domUpdates.updateTrendingDates(trendingStepsPhraseContainer, trendingStepsDays);
+  // trendingStepsPhraseContainer.innerHTML = `<p class='trend-line'>${user.trendingStepDays[0]}</p>`;
 });
 ///////////////////////////////////////////////////////////////
