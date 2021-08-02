@@ -1,7 +1,7 @@
 import './css/base.scss';
 import './css/styles.scss';
 
-import {domUpdate, showDropDown} from './domUpdates';
+import {domUpdate, showDropDown, showInfo, submitAtcvDataBtn } from './domUpdates';
 
 // import userData from './data/users';
 // import sleepData from './data/sleep';
@@ -20,7 +20,7 @@ import dayjs from 'dayjs';
 domUpdate();
 
 
-
+submitAtcvDataBtn.addEventListener('click', postActivityData);
 
 // import activityData from './data/activity';
 import fetchCalls from './apiCalls';
@@ -40,8 +40,8 @@ import fetchCalls from './apiCalls';
 
 
 // mainPage.addEventListener('click', showInfo);
-profileButton.addEventListener('click', showDropdown);
-submitAtcvDataBtn.addEventListener('click', postActivityData);
+// profileButton.addEventListener('click', showDropdown);
+// submitAtcvDataBtn.addEventListener('click', postActivityData);
 
 document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
   addSleep(e);
@@ -58,73 +58,6 @@ function flipCard(cardToHide, cardToShow) {
   cardToShow.classList.remove('hide');
 }
 
-
-
-//////////////// DOM MANIPULATION ------------------------>
-// function showDropdown() {
-//   userInfoDropdown.classList.toggle('hide');
-// }
-
-
-// switch statement
-// needs a different target.
-function showInfo() {
-  if (event.target.classList.contains('steps-info-button')) {
-    flipCard(stepsMainCard, stepsInfoCard);
-  }
-  if (event.target.classList.contains('steps-friends-button')) {
-    flipCard(stepsMainCard, stepsFriendsCard);
-  }
-  if (event.target.classList.contains('steps-trending-button')) {
-    flipCard(stepsMainCard, stepsTrendingCard);
-  }
-  if (event.target.classList.contains('steps-calendar-button')) {
-    flipCard(stepsMainCard, stepsCalendarCard);
-  }
-  if (event.target.classList.contains('hydration-info-button')) {
-    flipCard(hydrationMainCard, hydrationInfoCard);
-  }
-  if (event.target.classList.contains('hydration-friends-button')) {
-    flipCard(hydrationMainCard, hydrationFriendsCard);
-  }
-  if (event.target.classList.contains('hydration-calendar-button')) {
-    flipCard(hydrationMainCard, hydrationCalendarCard);
-  }
-  if (event.target.classList.contains('stairs-info-button')) {
-    flipCard(stairsMainCard, stairsInfoCard);
-  }
-  if (event.target.classList.contains('stairs-friends-button')) {
-    flipCard(stairsMainCard, stairsFriendsCard);
-  }
-  if (event.target.classList.contains('stairs-trending-button')) {
-    flipCard(stairsMainCard, stairsTrendingCard);
-  }
-  if (event.target.classList.contains('stairs-calendar-button')) {
-    flipCard(stairsMainCard, stairsCalendarCard);
-  }
-  if (event.target.classList.contains('sleep-info-button')) {
-    flipCard(sleepMainCard, sleepInfoCard);
-  }
-  if (event.target.classList.contains('sleep-friends-button')) {
-    flipCard(sleepMainCard, sleepFriendsCard);
-  }
-  if (event.target.classList.contains('sleep-calendar-button')) {
-    flipCard(sleepMainCard, sleepCalendarCard);
-  }
-  if (event.target.classList.contains('steps-go-back-button')) {
-    flipCard(event.target.parentNode, stepsMainCard);
-  }
-  if (event.target.classList.contains('hydration-go-back-button')) {
-    flipCard(event.target.parentNode, hydrationMainCard);
-  }
-  if (event.target.classList.contains('stairs-go-back-button')) {
-    flipCard(event.target.parentNode, stairsMainCard);
-  }
-  if (event.target.classList.contains('sleep-go-back-button')) {
-    flipCard(event.target.parentNode, sleepMainCard);
-  }
-}
-//////////////// ------------------------------->
 
 
 //this holds all our users...* this is an important global variable right now.
