@@ -1,3 +1,4 @@
+
 const domUpdates = {
 
   displayDomData(todayActDomSection, actInfoData) {
@@ -19,8 +20,7 @@ const domUpdates = {
     `
     <p class='trend-line'>${activityDaysInfo}</p>
     `
-  }
-
+  },
 }
 
 export default  domUpdates;

@@ -15,8 +15,9 @@ const fetchCalls = {
       },
       body: JSON.stringify(body),
     })
-    .then((res) => this.checkForErrors(res))
-    .catch((error) => this.displayErrorMessage(error, endPoint));
+      .then((res) => 
+        this.checkForErrors(res))
+      .catch((error) => this.displayErrorMessage(error, endPoint));
   },
 
   checkForErrors(res) {
@@ -27,8 +28,8 @@ const fetchCalls = {
   },
 
   displayErrorMessage(error, endPoint) {
-  const postErrorActivity = document.querySelector(".post-error-activity");
-  const errorField = document.querySelector('.js-error');
+    const postErrorActivity = document.querySelector(".post-error-activity");
+    const errorField = document.querySelector('.js-error');
 
     if (endPoint === 'activity') {
       postErrorActivity.innerText = `${err} -Please check back later.`
