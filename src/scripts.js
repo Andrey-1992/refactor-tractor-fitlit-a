@@ -1,13 +1,12 @@
 import './css/base.scss';
 import './css/styles.scss';
 
-import {domUpdate, showDropDown, showInfo, submitAtcvDataBtn } from './domUpdates';
+import {domUpdate, showDropDown, showInfo, submitAtcvDataBtn,stairsTrendingButton,
+stepsTrendingButton, stepsInfoActiveMinutesToday, stepsUserStepsToday, userInformation, stepsInfoMilesWalkedToday } from './domUpdates';
 
 // import userData from './data/users';
 // import sleepData from './data/sleep';
 import hydrationData from './data/hydration';
-import HydrationRepo from './hydrationRepo'
-import SleepRepo from './SleepRepo.js'
 import UserRepository from './UserRepository';
 import User from './User';
 import Activity from './Activity';
@@ -33,11 +32,6 @@ import fetchCalls from './apiCalls';
 
 // let user ;
 // let todayDate = "2019/09/22";
-
-
-
-
-
 
 // mainPage.addEventListener('click', showInfo);
 // profileButton.addEventListener('click', showDropdown);
@@ -72,7 +66,7 @@ let userRepository = new UserRepository();
 // let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
 // console.log("date here--->", currentDate)
 
-let todayDate= '2020/01/19';
+let todayDate = '2020/01/19';
 
 
 // default date--- last date in the array
@@ -122,20 +116,11 @@ fetchData();
 ////////////////// FETCH CALLS -------------------------------->
 
 
-
-//This will then take the data from the api call data and AFTER the use repo is created with all of the user instances it can then store the user data on the user.
-
-//STEP 2
 function storeUserData (activityData, hydrationData, sleepData) {
-    // -------------------------------------->
-    // After that we had instantiated every element from the userData in a User class, we would update the properties relted of each instated user (.activityRecord, .accomplishedDays, .trendingStepDays ...) - Using this iteration will allow us to create an instances of every element from the activityData file and push it in the correct instantiated user ! ---->
-
     activityData.activityData.forEach(activity => {
      new Activity(activity, userRepository);
     });
-    //--------------------------------------->
 
-    // The same idea for this other two data sets ---------------->
     hydrationData.hydrationData.forEach(hydration => {
       new Hydration(hydration, userRepository);
     });
@@ -143,7 +128,6 @@ function storeUserData (activityData, hydrationData, sleepData) {
     sleepData.sleepData.forEach(sleep => {
       new Sleep(sleep, userRepository);
     });
-    // ----------------------------------------------------------->
   }
 
 
@@ -192,6 +176,51 @@ function storeUserData (activityData, hydrationData, sleepData) {
   //------------------------------------------------------------->
 
 
+
+
+function addSleep(e) {
+  e.preventDefault();
+  let defaultDate = new Date();
+  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+  const formData = new FormData(e.target);
+  todayDate = currentDate;
+
+  const sleepItem = {
+    userID: user.id,
+    date: currentDate,
+    hoursSlept: formData.get('hoursSlept'),
+    sleepQuality: formData.get('sleepQuality')
+  }
+
+  fetchCalls.postNewData('sleep', sleepItem);
+  fetchData();
+  e.target.reset();
+}
+
+//PROBLEM// REFACTOR 
+/// BECAUSE OF THE GLOBAL DATE VARIABLE PROBLEM THIS HAS TO STAY IN SCRIPTS FOR NOW
+function sleepInformation(user, userRepository) {
+
+  sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
+
+  sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
+
+  // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getLongestSleepers(todayDate)
+  // }).getFirstName();
+
+  // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getWorstSleepers(todayDate)
+  // }).getFirstName();
+
+  sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
+
+  sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
+
+  sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
+
+  sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
+}
 
 ///// This function will work when we implement the fetch calls for the - Iteration 5 || Activity class Info --------------------------------------->
 function activityInformation(user, userRepository) {
@@ -266,42 +295,6 @@ function activityInformation(user, userRepository) {
 
 
 
-/// Function to make it work with the FETCH CALLS
-// - Iteration 1 || User Info --------------------------------------->
-function userInformation(user) {
-
-  dropdownGoal.innerText = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
-
-  dropdownEmail.innerText = `EMAIL | ${user.email}`;
-
-  dropdownName.innerText = user.name.toUpperCase();
-
-  headerName.innerText = `${user.getFirstName()}'S `;
-}
-// ------------------------------------------------------------------>
-
-
-
-function addSleep(e) {
-  e.preventDefault();
-  let defaultDate = new Date();
-  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-  const formData = new FormData(e.target);
-  todayDate = currentDate;
-
-  const sleepItem = {
-    userID: user.id,
-    date: currentDate,
-    hoursSlept: formData.get('hoursSlept'),
-    sleepQuality: formData.get('sleepQuality')
-  }
-
-  fetchCalls.postNewData('sleep', sleepItem);
-  fetchData();
-  e.target.reset();
-}
-
-
 ///PUT ALL OF THIS IN A FUNCTION TO CALL IN DISPLAY INFO AFTER API CALL MADE.
 ///TO DO: ... Move INTO USER CLASSS AND WRAP HYDRATION INFORMATION FUNCTION AROUND IT TO MATCH OTHERS. ----------------------------------------------------
 
@@ -348,29 +341,33 @@ function addSleep(e) {
 
 
 ////////////// SLEPT FUNCTIONALITY ------------------------->
-function sleepInformation(user, userRepository) {
+// function sleepInformation(user, userRepository) {
 
-sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
 
-sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
+  
+//   sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
 
-// sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getLongestSleepers(todayDate)
-// }).getFirstName();
+// sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-// sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getWorstSleepers(todayDate)
-// }).getFirstName();
+// // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+// //   return user.id === userRepository.getLongestSleepers(todayDate)
+// // }).getFirstName();
 
-sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
+// // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+// //   return user.id === userRepository.getWorstSleepers(todayDate)
+// // }).getFirstName();
 
-sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
+// sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
-sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
+// sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
 
-sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
+// sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
 
-}
+// sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
+
+
+
+// }
 
 
 

@@ -1,5 +1,4 @@
-
-///---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
+//---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
 let dailyOz = document.querySelectorAll('.daily-oz');
 let dropdownEmail = document.querySelector('#dropdown-email');
 let dropdownFriendsStepsContainer = document.querySelector('#dropdown-friends-steps-container');
@@ -40,24 +39,22 @@ let stairsFriendsCard = document.querySelector('#stairs-friends-card');
 let stairsInfoCard = document.querySelector('#stairs-info-card');
 let stairsInfoFlightsToday = document.querySelector('#stairs-info-flights-today');
 let stairsMainCard = document.querySelector('#stairs-main-card');
-let stairsTrendingButton = document.querySelector('.stairs-trending-button');
-let stairsTrendingCard = document.querySelector('#stairs-trending-card');
+export let stairsTrendingButton = document.querySelector('.stairs-trending-button');
+export let stairsTrendingCard = document.querySelector('#stairs-trending-card');
 let stairsUserStairsToday = document.querySelector('#stairs-user-stairs-today');
 let stepsCalendarTotalActiveMinutesWeekly = document.querySelector('#steps-calendar-total-active-minutes-weekly');
 let stepsCalendarTotalStepsWeekly = document.querySelector('#steps-calendar-total-steps-weekly');
 let stepsFriendAverageStepGoal = document.querySelector('#steps-friend-average-step-goal');
-let stepsInfoActiveMinutesToday = document.querySelector('#steps-info-active-minutes-today');
-let stepsInfoMilesWalkedToday = document.querySelector('#steps-info-miles-walked-today');
+export let stepsInfoActiveMinutesToday = document.querySelector('#steps-info-active-minutes-today');
+export let stepsInfoMilesWalkedToday = document.querySelector('#steps-info-miles-walked-today');
 let stepsFriendActiveMinutesAverageToday = document.querySelector('#steps-friend-active-minutes-average-today');
 let stepsFriendStepsAverageToday = document.querySelector('#steps-friend-steps-average-today');
-let stepsTrendingButton = document.querySelector('.steps-trending-button');
-let stepsUserStepsToday = document.querySelector('#steps-user-steps-today');
+export let stepsTrendingButton = document.querySelector('.steps-trending-button');
+export let stepsUserStepsToday = document.querySelector('#steps-user-steps-today');
 let trendingStepsPhraseContainer = document.querySelector('.trending-steps-phrase-container');
 let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phrase-container');
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
-
-// queries for DOM post request !
 let addNumSteps = document.querySelector('.add-num-steps');
 let addMinActv = document.querySelector('.add-min-actv');
 let addFlightStairs = document.querySelector('.add-flight-stairs');
@@ -136,11 +133,18 @@ profileButton.addEventListener('click', showDropdown);
 mainPage.addEventListener('click', showInfo);
 
 
-
-
-////////////// DOM MANIPULATION ------------------------>
 function showDropdown() {
   userInfoDropdown.classList.toggle('hide');
 }
 
 
+export function userInformation(user) {
+
+  dropdownGoal.innerText = `DAILY STEP GOAL | ${user.dailyStepGoal}`;
+
+  dropdownEmail.innerText = `EMAIL | ${user.email}`;
+
+  dropdownName.innerText = user.name.toUpperCase();
+
+  headerName.innerText = `${user.getFirstName()}'S `;
+}
