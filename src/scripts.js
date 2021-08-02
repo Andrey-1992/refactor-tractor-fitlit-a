@@ -1,6 +1,8 @@
 import './css/base.scss';
 import './css/styles.scss';
 
+import {domUpdate, showDropDown} from './domUpdates';
+
 // import userData from './data/users';
 // import sleepData from './data/sleep';
 import hydrationData from './data/hydration';
@@ -12,6 +14,12 @@ import Activity from './Activity';
 import Hydration from './Hydration';
 import Sleep from './Sleep';
 import dayjs from 'dayjs';
+
+
+
+domUpdate();
+
+
 
 
 // import activityData from './data/activity';
@@ -29,73 +37,15 @@ import fetchCalls from './apiCalls';
 
 
 
-///---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
-let dailyOz = document.querySelectorAll('.daily-oz');
-let dropdownEmail = document.querySelector('#dropdown-email');
-let dropdownFriendsStepsContainer = document.querySelector('#dropdown-friends-steps-container');
-let dropdownGoal = document.querySelector('#dropdown-goal');
-let dropdownName = document.querySelector('#dropdown-name');
-let headerName = document.querySelector('#header-name');
-let hydrationCalendarCard = document.querySelector('#hydration-calendar-card');
-let hydrationFriendOuncesToday = document.querySelector('#hydration-friend-ounces-today');
-let hydrationFriendsCard = document.querySelector('#hydration-friends-card');
-let hydrationInfoCard = document.querySelector('#hydration-info-card');
-let hydrationInfoGlassesToday = document.querySelector('#hydration-info-glasses-today');
-let hydrationMainCard = document.querySelector('#hydration-main-card');
-let hydrationUserOuncesToday = document.querySelector('#hydration-user-ounces-today');
-let mainPage = document.querySelector('main');
-let profileButton = document.querySelector('#profile-button');
-let sleepCalendarCard = document.querySelector('#sleep-calendar-card');
-let sleepCalendarHoursAverageWeekly = document.querySelector('#sleep-calendar-hours-average-weekly');
-let sleepCalendarQualityAverageWeekly = document.querySelector('#sleep-calendar-quality-average-weekly');
-let sleepFriendLongestSleeper = document.querySelector('#sleep-friend-longest-sleeper');
-let sleepFriendsCard = document.querySelector('#sleep-friends-card');
-let sleepFriendWorstSleeper = document.querySelector('#sleep-friend-worst-sleeper');
-let sleepInfoCard = document.querySelector('#sleep-info-card');
-let sleepInfoHoursAverageAlltime = document.querySelector('#sleep-info-hours-average-alltime');
-let sleepInfoQualityAverageAlltime = document.querySelector('#sleep-info-quality-average-alltime');
-let sleepInfoQualityToday = document.querySelector('#sleep-info-quality-today');
-let sleepMainCard = document.querySelector('#sleep-main-card');
-let sleepUserHoursToday = document.querySelector('#sleep-user-hours-today');
-let stairsCalendarCard = document.querySelector('#stairs-calendar-card');
-let stairsCalendarFlightsAverageWeekly = document.querySelector('#stairs-calendar-flights-average-weekly');
-let stairsCalendarStairsAverageWeekly = document.querySelector('#stairs-calendar-stairs-average-weekly');
-let stepsMainCard = document.querySelector('#steps-main-card');
-let stepsInfoCard = document.querySelector('#steps-info-card');
-let stepsFriendsCard = document.querySelector('#steps-friends-card');
-let stepsTrendingCard = document.querySelector('#steps-trending-card');
-let stepsCalendarCard = document.querySelector('#steps-calendar-card');
-let stairsFriendFlightsAverageToday = document.querySelector('#stairs-friend-flights-average-today');
-let stairsFriendsCard = document.querySelector('#stairs-friends-card');
-let stairsInfoCard = document.querySelector('#stairs-info-card');
-let stairsInfoFlightsToday = document.querySelector('#stairs-info-flights-today');
-let stairsMainCard = document.querySelector('#stairs-main-card');
-let stairsTrendingButton = document.querySelector('.stairs-trending-button');
-let stairsTrendingCard = document.querySelector('#stairs-trending-card');
-let stairsUserStairsToday = document.querySelector('#stairs-user-stairs-today');
-let stepsCalendarTotalActiveMinutesWeekly = document.querySelector('#steps-calendar-total-active-minutes-weekly');
-let stepsCalendarTotalStepsWeekly = document.querySelector('#steps-calendar-total-steps-weekly');
-let stepsFriendAverageStepGoal = document.querySelector('#steps-friend-average-step-goal');
-let stepsInfoActiveMinutesToday = document.querySelector('#steps-info-active-minutes-today');
-let stepsInfoMilesWalkedToday = document.querySelector('#steps-info-miles-walked-today');
-let stepsFriendActiveMinutesAverageToday = document.querySelector('#steps-friend-active-minutes-average-today');
-let stepsFriendStepsAverageToday = document.querySelector('#steps-friend-steps-average-today');
-let stepsTrendingButton = document.querySelector('.steps-trending-button');
-let stepsUserStepsToday = document.querySelector('#steps-user-steps-today');
-let trendingStepsPhraseContainer = document.querySelector('.trending-steps-phrase-container');
-let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phrase-container');
-let userInfoDropdown = document.querySelector('#user-info-dropdown');
-let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
 
-// queries for DOM post request !
-let addNumSteps = document.querySelector('.add-num-steps');
-let addMinActv = document.querySelector('.add-min-actv');
-let addFlightStairs = document.querySelector('.add-flight-stairs');
-let submitAtcvDataBtn = document.getElementById('submitAtcvData');
 
-mainPage.addEventListener('click', showInfo);
+// mainPage.addEventListener('click', showInfo);
 profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
+
+document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
+  addSleep(e);
+})
 
 
 function preventDefault() {
@@ -111,9 +61,9 @@ function flipCard(cardToHide, cardToShow) {
 
 
 //////////////// DOM MANIPULATION ------------------------>
-function showDropdown() {
-  userInfoDropdown.classList.toggle('hide');
-}
+// function showDropdown() {
+//   userInfoDropdown.classList.toggle('hide');
+// }
 
 
 // switch statement
@@ -398,10 +348,6 @@ function userInformation(user) {
 // ------------------------------------------------------------------>
 
 
-///POST DATA FUNCTIONS ---------------------------------------
-document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
-  addSleep(e);
-})
 
 function addSleep(e) {
   e.preventDefault();
@@ -419,36 +365,8 @@ function addSleep(e) {
 
   fetchCalls.postNewData('sleep', sleepItem);
   fetchData();
-
-
-  // addSleepItem(sleepItem);
   e.target.reset();
 }
-
-// function addSleepItem(sleepItem) {
-//   fetch('http://localhost:3001/api/v1/sleep', {
-//     method: 'POST',
-//     headers: { 'Content-type': 'application/json' },
-//     body: JSON.stringify(sleepItem)
-//   })
-//  .then(response => checkForError(response))
-//   .then(fetchData())
-//   .catch(err => displayErrorMessage(err)) 
-// }
-
-// function checkForError(response) {
-//   if (!response.ok) {
-//     throw new Error ('Please make sure all fields are selected.')
-//   } else {
-//     return response.json();
-//   }
-// }
-
-// function displayErrorMessage(err) {
-//   const errorField = document.querySelector('.js-error');
-//   errorField.innerHTML = `${err} -Please check back later.`
-// }
-
 
 
 ///PUT ALL OF THIS IN A FUNCTION TO CALL IN DISPLAY INFO AFTER API CALL MADE.
