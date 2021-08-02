@@ -23,12 +23,12 @@ const fetchCalls = {
   },
 
   displayErrorMessage(error) {
-  const postErrorActivity = document.querySelector(".post-error-activity");
-  const message =
-    error.message === "Failed to fetch"
-      ? "Somthing went worng, Please check your internet"
-      : error.message;
-  postErrorActivity.innerText = message;
+    const postErrorActivity = document.querySelector(".post-error-activity");
+    const message =
+      error.message === "Failed to fetch"
+        ? "Somthing went worng, Please check your internet"
+        : error.message;
+    postErrorActivity.innerText = message;
   },
 
 checkForErrors(res) {
