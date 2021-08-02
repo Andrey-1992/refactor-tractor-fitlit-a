@@ -16,10 +16,10 @@ const fetchCalls = {
       },
       body: JSON.stringify(body),
     })
-      .then(response => response.json())
-      .then(confirmation => console.log("this is the new object that have been POSTED:", confirmation));
-    // .then((res) => this.checkForErrors(res))
-    // .catch((error) => this.displayErrorMessage(error));
+      // .then(response => response.json())
+      // .then(confirmation => console.log("this is the new object that have been POSTED:", confirmation));
+    .then((res) => this.checkForErrors(res))
+    .catch((error) => this.displayErrorMessage(error));
   },
 
   displayErrorMessage(error) {
@@ -32,7 +32,6 @@ const fetchCalls = {
   },
 
 checkForErrors(res) {
-  // console.log(res);
   if (!res.ok) {
     throw new Error("Please make sure all Fields are filled out");
   }

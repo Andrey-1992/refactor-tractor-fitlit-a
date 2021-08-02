@@ -133,7 +133,6 @@ class User {
 
 
   ////////////////////////  - ACTIVITY MEHTODS - ////////////////////////
-  // update activity data to corresponding user instances ------>
   updateActivities(activity) {
     this.activityRecord.unshift(activity);
     if (activity.numSteps >= this.dailyStepGoal) {
@@ -141,7 +140,6 @@ class User {
     }
   }
 
-  //This method is recyclable and help us for all the activity info for today
   findActivityInfoToday(user) {
     let todayDate = this.activityRecord[0].date;
 
@@ -149,11 +147,8 @@ class User {
       activity.userId === user.id && activity.date === todayDate);
   }
 
-  // calculate average "minutes", "steps", "flightsOfStairs" this WEEK -->
   calculateActivityAverageThisWeek(activityType) {
     let todayDate = this.activityRecord[0].date;
-    // console.log(todayDate);
-    // console.log(this.activityRecord)
 
     return (this.activityRecord.reduce((sum, activity) => {
       let index = this.activityRecord.indexOf(this.activityRecord.find(activity => activity.date === todayDate));
@@ -164,11 +159,7 @@ class User {
     }, 0) / 7).toFixed(0);
   }
 
-  // calculate daily calores -------> EXTRA INFO <----------------
   calculateDailyCalories(date) {
-    //    if(!todayDate){
-    //   todayDate = this.activityRecord[0].date);
-    // }
     let totalMinutes = this.activityRecord.filter(activity => {
       return activity.date === date
     }).reduce((sumMinutes, activity) => {
@@ -177,7 +168,6 @@ class User {
     return Math.round(totalMinutes * 7.6);
   }
 
-  // Where are we using this method ? ------------->
   findTrendingStepDays() {
     let positiveDays = [];
     for (var i = 0; i < this.activityRecord.length; i++) {
@@ -190,7 +180,6 @@ class User {
     }
   }
 
-  // Where are we using this method ? ------------->
   findTrendingStairsDays() {
     let positiveDays = [];
     for (var i = 0; i < this.activityRecord.length; i++) {
@@ -203,7 +192,6 @@ class User {
     }
   }
 
-  // Extra Method: (extension) --------->
   findFriendsNames(users) {
     this.friends.forEach(friend => {
       this.friendsNames.push(users.find(user => user.id === friend).getFirstName());
@@ -211,9 +199,6 @@ class User {
   }
 
   calculateTotalStepsThisWeek(todayDate) {
-    // let todayDate = this.activityRecord[0].date;
-    // console.log(this.totalStepsThisWeek)
-
     this.totalStepsThisWeek = (this.activityRecord.reduce((sum, activity) => {
       let index = this.activityRecord.indexOf(this.activityRecord.find(activity => activity.date === todayDate));
       if (index <= this.activityRecord.indexOf(activity) && this.activityRecord.indexOf(activity) <= (index + 6)) {
@@ -223,11 +208,7 @@ class User {
     }, 0));
   }
 
-  // Extra Method: (extension) --------->
   findFriendsTotalStepsForWeek(users, date) {
-      // if(!date){
-    //   this.sleepQualityAverage[0].date;
-    // }
     this.friends.map(friend => {
       let matchedFriend = users.find(user => user.id === friend);
       matchedFriend.calculateTotalStepsThisWeek(date);
@@ -238,11 +219,8 @@ class User {
           'totalWeeklySteps': matchedFriend.totalStepsThisWeek
         })
     })
-    
+
     this.calculateTotalStepsThisWeek(date);
-      // if(!date){
-    //   this.sleepQualityAverage[0].date;
-    // }
     this.friendsActivityRecords.push({
       'id': this.id,
       'firstName': 'YOU',
@@ -251,7 +229,6 @@ class User {
     this.friendsActivityRecords = this.friendsActivityRecords.sort((a, b) => b.totalWeeklySteps - a.totalWeeklySteps);
   }
 
-  // Extra Method: (extension) --------->
   findClimbingRecord() {
     return this.activityRecord.sort((a, b) => {
       return b.flightsOfStairs - a.flightsOfStairs;
