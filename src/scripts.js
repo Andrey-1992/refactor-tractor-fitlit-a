@@ -269,7 +269,8 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
 
   function updatePageInfo() {
-    user = userRepository.users[0];
+    user = userRepository.users[Math.floor(Math.random()* userRepository.users.length)]
+    // user = userRepository.users[0];
 
     activityInformation(user, userRepository);
     sleepInformation(user, userRepository);
@@ -307,7 +308,7 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
   fetchCalls.postNewData('activity', postObject);
   fetchData();
-   e.target.reset();
+   // e.target.reset();
   }
 
   //------------------------------------------------------------->
@@ -317,43 +318,43 @@ function activityInformation(user, userRepository) {
 
   ///////// ACTIVITIES FOR TODAY ---------------->
 
-  const minActTodayInfo = user.findActivityInfoToday(user).minutesActive;
+  const minActTodayInfo = user.findActivityInfoToday(user, todayDate).minutesActive;
   domUpdates.displayDomData(stepsInfoActiveMinutesToday, minActTodayInfo)
   // stepsInfoActiveMinutesToday.innerText = user.findActivityInfoToday(user).minutesActive;
 
-  const stepsTodayInfo = user.findActivityInfoToday(user).steps;
+  const stepsTodayInfo = user.findActivityInfoToday(user, todayDate).steps;
   domUpdates.displayDomData(stepsUserStepsToday, stepsTodayInfo);
   // stepsUserStepsToday.innerText = user.findActivityInfoToday(user).steps;
 
-  const milesWalkedTodayInfo = user.findActivityInfoToday(user).calculateMiles(userRepository);
+  const milesWalkedTodayInfo = user.findActivityInfoToday(user, todayDate).calculateMiles(userRepository);
   domUpdates.displayDomData(stepsInfoMilesWalkedToday, milesWalkedTodayInfo);
   // stepsInfoMilesWalkedToday.innerText = user.findActivityInfoToday(user).calculateMiles(userRepository);
 
-  const flightsOfStairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs;
+  const flightsOfStairsTodayInfo = user.findActivityInfoToday(user, todayDate).flightsOfStairs;
   domUpdates.displayDomData(stairsInfoFlightsToday, flightsOfStairsTodayInfo);
   // stairsInfoFlightsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs;
 
 
-  const stairsTodayInfo = user.findActivityInfoToday(user).flightsOfStairs * 12;
+  const stairsTodayInfo = user.findActivityInfoToday(user, todayDate).flightsOfStairs * 12;
   domUpdates.displayDomData(stairsUserStairsToday, stairsTodayInfo);
   // stairsUserStairsToday.innerText = user.findActivityInfoToday(user).flightsOfStairs * 12;
 
 
 
   ///////// ACTIVITIES FOR WEEK -------------------->
-  const actvAvgWeekInfo = user.calculateActivityAverageThisWeek('minutesActive');
+  const actvAvgWeekInfo = user.calculateActivityAverageThisWeek('minutesActive', todayDate);
   domUpdates.displayDomData(stepsCalendarTotalActiveMinutesWeekly, actvAvgWeekInfo);
   // stepsCalendarTotalActiveMinutesWeekly.innerText = user.calculateActivityAverageThisWeek('minutesActive')
 
-  const totalStepsThisWeekInfo = user.calculateActivityAverageThisWeek('steps');
+  const totalStepsThisWeekInfo = user.calculateActivityAverageThisWeek('steps', todayDate);
   domUpdates.displayDomData(stepsCalendarTotalStepsWeekly, totalStepsThisWeekInfo);
   // stepsCalendarTotalStepsWeekly.innerText = user.calculateActivityAverageThisWeek('steps');
 
-  const flightOfStairsAvgWeekInfo = user.calculateActivityAverageThisWeek('flightsOfStairs');
+  const flightOfStairsAvgWeekInfo = user.calculateActivityAverageThisWeek('flightsOfStairs', todayDate);
   domUpdates.displayDomData(stairsCalendarFlightsAverageWeekly, flightOfStairsAvgWeekInfo);
   // stairsCalendarFlightsAverageWeekly.innerText = user.calculateActivityAverageThisWeek('flightsOfStairs');
 
-  const stairsAvgWeekInfo = (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);
+  const stairsAvgWeekInfo = (user.calculateActivityAverageThisWeek('flightsOfStairs', todayDate) * 12).toFixed(0);
   domUpdates.displayDomData(stairsCalendarStairsAverageWeekly, stairsAvgWeekInfo);
   // stairsCalendarStairsAverageWeekly.innerText =
   // (user.calculateActivityAverageThisWeek('flightsOfStairs') * 12).toFixed(0);

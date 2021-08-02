@@ -140,15 +140,15 @@ class User {
     }
   }
 
-  findActivityInfoToday(user) {
-    let todayDate = this.activityRecord[0].date;
+  findActivityInfoToday(user, todayDate) {
+    // let todayDate = this.activityRecord[0].date;
 
     return this.activityRecord.find(activity =>
       activity.userId === user.id && activity.date === todayDate);
   }
 
-  calculateActivityAverageThisWeek(activityType) {
-    let todayDate = this.activityRecord[0].date;
+  calculateActivityAverageThisWeek(activityType, todayDate) {
+    // let todayDate = this.activityRecord[0].date;
 
     return (this.activityRecord.reduce((sum, activity) => {
       let index = this.activityRecord.indexOf(this.activityRecord.find(activity => activity.date === todayDate));
