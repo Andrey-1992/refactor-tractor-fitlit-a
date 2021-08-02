@@ -220,6 +220,7 @@ function storeUserData (activityData, hydrationData, sleepData) {
     user = userRepository.users[0];
 
     activityInformation(user, userRepository);
+    hydrationInformation(user, userRepository)
     sleepInformation(user, userRepository);
     userInformation(user);
   }
@@ -352,9 +353,30 @@ function postActivityData(e) {
 
 
 
-///PUT ALL OF THIS IN A FUNCTION TO CALL IN DISPLAY INFO AFTER API CALL MADE.
-///TO DO: ... Move INTO USER CLASSS AND WRAP HYDRATION INFORMATION FUNCTION AROUND IT TO MATCH OTHERS. ----------------------------------------------------
 
+function hydrationInformation(user, userRepository) {
+  let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
+    if (Object.keys(a)[0] > Object.keys(b)[0]) {
+      return -1;
+    }
+    if (Object.keys(a)[0] < Object.keys(b)[0]) {
+      return 1;
+    }
+    return 0;
+  });
+for (var i = 0; i < dailyOz.length; i++) {
+  dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
+}
+
+hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
+console.log("hello");
+
+
+hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater(todayDate);
+
+hydrationInfoGlassesToday.innerText = userRepository.calculateAverageDailyWater(todayDate)/8;
+
+// }
 // function hydrationInformation(user, userRepository) {
 // for (var i = 0; i < dailyOz.length; i++) {
 //   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
@@ -385,7 +407,7 @@ function postActivityData(e) {
 //     return 0;
 //   });
 
-// }
+}
 
 
 //DOM ELEMENTS THAT ARE UPDATED PART 2 THAT NEED USER instantiated first!!***...
