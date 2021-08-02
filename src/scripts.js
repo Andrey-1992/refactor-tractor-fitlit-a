@@ -355,7 +355,7 @@ function postHydrationData(e) {
   todayDate = currentDate;
   const hydrationDataPost = parseInt(hydrationInfoEntry.value);
   let postObject = {
-    userID: user.ID,
+    userID: user.id,
     date: todayDate,
     numOunces: hydrationDataPost
   };
