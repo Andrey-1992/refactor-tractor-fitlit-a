@@ -67,7 +67,7 @@ let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phr
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
 let hydrationPostEntry = document.querySelector('.num-ounces-input');
-let hydrationInfoEntry = document.querySelector('.add-num-ounces')
+let hydrationInfoEntry = document.querySelector('.add-num-ounces');
 
 
 let addNumSteps = document.querySelector('.add-num-steps');
@@ -195,10 +195,10 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
 function updatePageInfo() {
   user = userRepository.users[0];
-   activityInformation(user, userRepository);
-    hydrationInformation(user, userRepository)
-    sleepInformation(user, userRepository);
-    userInformation(user);
+  updateActivityInformation(user, userRepository);
+  updateHydrationInformation(user, userRepository)
+  updateSleepInformation(user, userRepository);
+  updateUserInformation(user);
 }
 
 function updateActivityInformation(user, userRepository) {
@@ -329,9 +329,7 @@ function postHydrationData(e) {
   fetchCalls.postNewData('hydration', postObject);
   fetchData();
 }
-
-
-function hydrationInformation(user, userRepository) {
+function updateHydrationInformation(user, userRepository) {
   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
     if (Object.keys(a)[0] > Object.keys(b)[0]) {
       return -1;
