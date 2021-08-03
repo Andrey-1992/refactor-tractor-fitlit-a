@@ -1,11 +1,5 @@
 import './css/base.scss';
 import './css/styles.scss';
-
-// import userData from './data/users';
-// import sleepData from './data/sleep';
-import hydrationData from './data/hydration';
-import HydrationRepo from './hydrationRepo'
-import SleepRepo from './SleepRepo.js'
 import UserRepository from './UserRepository';
 import User from './User';
 import Activity from './Activity';
@@ -15,22 +9,7 @@ import dayjs from 'dayjs';
 import fetchCalls from './apiCalls';
 import domUpdates from './domUpdates';
 
-
-// import activityData from './data/activity';
-
-// let defaultDate = new Date();
-// // console.log(defaultDate)
-// let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
-// console.log("date here--->", currentDate)
-
-
-// let user ;
-// let todayDate = "2019/09/22";
-
-
-
-
-///---GLOBAL VARIABLES FOR DOM ELEMENTS ---------------------------
+///------------------QUERY SELECTORS ------------------------///
 let dailyOz = document.querySelectorAll('.daily-oz');
 let dropdownEmail = document.querySelector('#dropdown-email');
 let dropdownFriendsStepsContainer = document.querySelector('#dropdown-friends-steps-container');
@@ -90,33 +69,38 @@ let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
 let hydrationPostEntry = document.querySelector('.num-ounces-input');
 let hydrationInfoEntry = document.querySelector('.add-num-ounces')
 
-// queries for DOM post request !
+
 let addNumSteps = document.querySelector('.add-num-steps');
 let addMinActv = document.querySelector('.add-min-actv');
 let addFlightStairs = document.querySelector('.add-flight-stairs');
 let submitAtcvDataBtn = document.getElementById('submitAtcvData');
 
+///------------------EVENT LISTENERS------------------------///
 mainPage.addEventListener('click', showInfo);
 profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
 hydrationPostEntry.addEventListener('click', postHydrationData);
 
+document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
+  addSleep(e)
+});
+window.addEventListener("load", fetchData());
+
+
+///------------------GLOBAL VARIABLES------------------------///
+let userRepository = new UserRepository();
+let todayDate = "2020/01/22";
+let user;
 
 function flipCard(cardToHide, cardToShow) {
   cardToHide.classList.add('hide');
   cardToShow.classList.remove('hide');
 }
 
-
-
-//////////////// DOM MANIPULATION ------------------------>
 function showDropdown() {
   userInfoDropdown.classList.toggle('hide');
 }
 
-
-// switch statement
-// needs a different target.
 function showInfo() {
   if (event.target.classList.contains('steps-info-button')) {
     flipCard(stepsMainCard, stepsInfoCard);
@@ -174,12 +158,7 @@ function showInfo() {
   }
 }
 
-
-let userRepository = new UserRepository();
-let todayDate = "2020/01/22";
-let user;
-
-
+///------------------FETCH DATA FUNCTIONS------------------------///
 function fetchData() {
   const userInfo = fetchCalls.callFitLitData('users');
   const activityInfo = fetchCalls.callFitLitData('activity');
@@ -187,8 +166,8 @@ function fetchData() {
   const sleepInfo = fetchCalls.callFitLitData('sleep');
 
   Promise.all([userInfo, activityInfo, hydrationInfo, sleepInfo])
-  .then(data => initializedData(data[0], data[1], data[2], data[3]))
-  .catch(err => console.error(err))
+    .then(data => initializedData(data[0], data[1], data[2], data[3]))
+    .catch(err => console.error(err))
 }
 
 function initializedData(userData, activityData, hydrationData, sleepData) {
@@ -202,32 +181,27 @@ function intializeUserData(userData) {
   })
 }
 
-fetchData();
-
 function storeUserData (activityData, hydrationData, sleepData) {
-    activityData.activityData.forEach(activity => {
-     new Activity(activity, userRepository);
-    });
-    hydrationData.hydrationData.forEach(hydration => {
-      new Hydration(hydration, userRepository);
-    });
-    sleepData.sleepData.forEach(sleep => {
-      new Sleep(sleep, userRepository);
-    });
-  }
+  activityData.activityData.forEach(activity => {
+    new Activity(activity, userRepository);
+  });
+  hydrationData.hydrationData.forEach(hydration => {
+    new Hydration(hydration, userRepository);
+  });
+  sleepData.sleepData.forEach(sleep => {
+    new Sleep(sleep, userRepository);
+  });
+}
 
-
-  function updatePageInfo() {
-
-    user = userRepository.users[0];
-
-    activityInformation(user, userRepository);
+function updatePageInfo() {
+  user = userRepository.users[0];
+   activityInformation(user, userRepository);
     hydrationInformation(user, userRepository)
     sleepInformation(user, userRepository);
     userInformation(user);
-  }
+}
 
-function activityInformation(user, userRepository) {
+function updateActivityInformation(user, userRepository) {
   const minActTodayInfo = user.findActivityInfoToday(user, todayDate).minutesActive;
   domUpdates.displayDomData(stepsInfoActiveMinutesToday, minActTodayInfo)
 
@@ -289,7 +263,7 @@ function activityInformation(user, userRepository) {
   });
 }
 
-function userInformation(user) {
+function updateUserInformation(user) {
   const userUpperCaseName = user.name.toUpperCase();
   domUpdates.displayDomData(dropdownName, userUpperCaseName);
 
@@ -303,15 +277,9 @@ function userInformation(user) {
   domUpdates.displayDomData(headerName, userFirstName);
 }
 
-document.getElementById('sleep-card-container').addEventListener('submit', (e) => {
-  if (e.target.classList.contains("sleep-submit")) {
-    addSleep(e);
-  }
-});
-
+///------------------POST DATA FUNCTIONS------------------------///
 function addSleep(e) {
-  // e.preventDefault();
-  console.log("I am here")
+  e.preventDefault();
   let defaultDate = new Date();
   let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
   const formData = new FormData(e.target);
@@ -326,7 +294,6 @@ function addSleep(e) {
   fetchData();
   e.target.reset();
 }
-
 
 function postActivityData(e) {
   e.preventDefault();
@@ -363,6 +330,7 @@ function postHydrationData(e) {
   fetchData();
 }
 
+
 function hydrationInformation(user, userRepository) {
   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
     if (Object.keys(a)[0] > Object.keys(b)[0]) {
@@ -381,31 +349,32 @@ hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater
 hydrationInfoGlassesToday.innerText = userRepository.calculateAverageDailyWater(todayDate)/8;
 }
 
-function sleepInformation(user, userRepository) {
+function updateSleepInformation(user, userRepository) {
 
-sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
+  sleepCalendarHoursAverageWeekly.innerText = user.calculateAverageHoursThisWeek(todayDate);
 
-sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
+  sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-// sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getLongestSleepers(todayDate)
-// }).getFirstName();
-//
-// sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-//   return user.id === userRepository.getWorstSleepers(todayDate)
-// }).getFirstName();
+  // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getLongestSleepers(todayDate)
+  // }).getFirstName();
+  //
+  // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
+  //   return user.id === userRepository.getWorstSleepers(todayDate)
+  // }).getFirstName();
 
-sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
+  sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
-sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
+  sleepInfoQualityAverageAlltime.innerText = user.sleepQualityAverage;
 
-sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
+  sleepInfoQualityToday.innerText = user.getSleepQualityByDate(todayDate);
 
-sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
+  sleepUserHoursToday.innerText = user.getHoursSleptByDate(todayDate);
 
 }
 
-
+// stairsTrendingButton.addEventListener('click', updateTrendingStairsDays());
+// stepsTrendingButton.addEventListener('click', updateTrendingStepDays());
 
 function updateTrendingStairsDays() {
   user.findTrendingStairsDays();
