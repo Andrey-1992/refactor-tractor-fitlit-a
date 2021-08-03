@@ -66,7 +66,10 @@ let trendingStepsPhraseContainer = document.querySelector('.trending-steps-phras
 let trendingStairsPhraseContainer = document.querySelector('.trending-stairs-phrase-container');
 let userInfoDropdown = document.querySelector('#user-info-dropdown');
 let friendsStepsParagraphs = document.querySelectorAll('.friends-steps');
-let hydrationDataEntry = document.querySelectorAll('.num-ounces-input');
+let hydrationPostEntry = document.querySelector('.num-ounces-input');
+let hydrationInfoEntry = document.querySelector('.add-num-ounces')
+
+
 let addNumSteps = document.querySelector('.add-num-steps');
 let addMinActv = document.querySelector('.add-min-actv');
 let addFlightStairs = document.querySelector('.add-flight-stairs');
@@ -76,6 +79,8 @@ let submitAtcvDataBtn = document.getElementById('submitAtcvData');
 mainPage.addEventListener('click', showInfo);
 profileButton.addEventListener('click', showDropdown);
 submitAtcvDataBtn.addEventListener('click', postActivityData);
+hydrationPostEntry.addEventListener('click', postHydrationData);
+
 document.getElementById('js-add-sleep').addEventListener('submit', (e) => {
   addSleep(e)
 });
@@ -86,7 +91,6 @@ window.addEventListener("load", fetchData());
 let userRepository = new UserRepository();
 let todayDate = "2020/01/22";
 let user;
-
 
 function flipCard(cardToHide, cardToShow) {
   cardToHide.classList.add('hide');
@@ -191,9 +195,10 @@ function storeUserData (activityData, hydrationData, sleepData) {
 
 function updatePageInfo() {
   user = userRepository.users[0];
-  updateActivityInformation(user, userRepository);
-  updateSleepInformation(user, userRepository);
-  updateUserInformation(user);
+   activityInformation(user, userRepository);
+    hydrationInformation(user, userRepository)
+    sleepInformation(user, userRepository);
+    userInformation(user);
 }
 
 function updateActivityInformation(user, userRepository) {
@@ -310,66 +315,39 @@ function postActivityData(e) {
   fetchData();
 }
 
+function postHydrationData(e) {
+  e.preventDefault();
+  let defaultDate = new Date();
+  let currentDate = dayjs(defaultDate).format('YYYY/MM/DD');
+  todayDate = currentDate;
+  const hydrationDataPost = parseInt(hydrationInfoEntry.value);
+  let postObject = {
+    userID: user.id,
+    date: todayDate,
+    numOunces: hydrationDataPost
+  };
+  fetchCalls.postNewData('hydration', postObject);
+  fetchData();
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///PUT ALL OF THIS IN A FUNCTION TO CALL IN DISPLAY INFO AFTER API CALL MADE.
-///TO DO: ... Move INTO USER CLASSS AND WRAP HYDRATION INFORMATION FUNCTION AROUND IT TO MATCH OTHERS. ----------------------------------------------------
-
-// function hydrationInformation(user, userRepository) {
-// for (var i = 0; i < dailyOz.length; i++) {
-//   dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
-// }
-
-// hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
-// // Old Code
-// // hydrationUserOuncesToday.innerText = hydrationData.find(hydration => {
-// //   return hydration.userID === user.id && hydration.date === todayDate;
-// // }).numOunces;
-
-// hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater(todayDate);
-
-// //user class
-// hydrationInfoGlassesToday.innerText = hydrationData.find(hydration => {
-//   return hydration.userID === user.id && hydration.date === todayDate;
-// }).numOunces / 8;
-
-// //--------------------------------------------------------------------------
-// ///ERROR: scripts.js:179 ReferenceError: Cannot access 'sortedHydrationDataByDate' before initialization
-//   let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
-//     if (Object.keys(a)[0] > Object.keys(b)[0]) {
-//       return -1;
-//     }
-//     if (Object.keys(a)[0] < Object.keys(b)[0]) {
-//       return 1;
-//     }
-//     return 0;
-//   });
-
-// }
-
-
-//DOM ELEMENTS THAT ARE UPDATED PART 2 THAT NEED USER instantiated first!!***...
-///THESE FOR NOW NEED TO STAY HERE  -------------------
-
-// stairsTrendingButton.addEventListener('click', updateTrendingStairsDays());
-// stepsTrendingButton.addEventListener('click', updateTrendingStepDays());
-
-
-
+function hydrationInformation(user, userRepository) {
+  let sortedHydrationDataByDate = user.ouncesRecord.sort((a, b) => {
+    if (Object.keys(a)[0] > Object.keys(b)[0]) {
+      return -1;
+    }
+    if (Object.keys(a)[0] < Object.keys(b)[0]) {
+      return 1;
+    }
+    return 0;
+  });
+for (var i = 0; i < dailyOz.length; i++) {
+  dailyOz[i].innerText = user.addDailyOunces(Object.keys(sortedHydrationDataByDate[i])[0])
+}
+hydrationUserOuncesToday.innerText = user.getOuncesByDate(todayDate);
+hydrationFriendOuncesToday.innerText = userRepository.calculateAverageDailyWater(todayDate);
+hydrationInfoGlassesToday.innerText = userRepository.calculateAverageDailyWater(todayDate)/8;
+}
 
 function updateSleepInformation(user, userRepository) {
 
@@ -395,7 +373,8 @@ function updateSleepInformation(user, userRepository) {
 
 }
 
-
+// stairsTrendingButton.addEventListener('click', updateTrendingStairsDays());
+// stepsTrendingButton.addEventListener('click', updateTrendingStepDays());
 
 function updateTrendingStairsDays() {
   user.findTrendingStairsDays();
