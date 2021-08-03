@@ -1,6 +1,6 @@
 # Refactor Tractor (Fitlit Version A)
 
-## Process
+## Our Refactoring Process
 
 * Together, the team looked through the code base and discussed different `approaches to refactoring our class structure`. All of the applications data was originally written to be stored on the user. Because of this, we had to consider if restructuring would be less of a practice in refactoring/working with other's code and more of a complete rework of the original class structure. So our final decision to stick with the original class structure where the brains of the application was our user class. We also decided to take logic from the scripts.js file that was sorting through hardcoded data files, when it more appropriately should be using stored properties that on the user class to find and retrieve that data, and we created new methods on the user class to handle that logic. We then invoked those new methods to populate data on our dom.
 * Once we felt confident that we understood how the classes interacted, we were able to focus on our `fetch requests`. Becuase the user was the `brain` of this application, understanding our flow of which classes need to be instantiated before the next in order to populate and store the data in our user and user repositories was important. We had to take advantage of promise chaining to consider which data needed to be resolved before our next class could be created!
