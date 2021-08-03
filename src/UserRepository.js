@@ -38,22 +38,21 @@ class UserRepository {
   getLongestSleepers(date) {
     const usersByDate = [];
     this.users.forEach(user => {
-      usersByDate.push({hoursSlept:user.getHoursSleptByDate(date), name: user.name});
+      usersByDate.push({hoursSlept: user.getHoursSleptByDate(date), name: user.name});
     })
     return  usersByDate.sort((a, b) => a.hoursSlept - b.hoursSlept).pop().name;
   }
 
   getWorstSleepers(date) {
-    return sleepData.filter(sleep => {
-      return sleep.date === date;
-    }).sort((a, b) => {
-      return a.hoursSlept - b.hoursSlept;
-    })[0].userID;
+    const usersByDate = [];
+    this.users.forEach(user => {
+      usersByDate.push({hoursSlept: user.getHoursSleptByDate(date), name: user.name});
+    })
+    return  usersByDate.sort((a, b) => a.hoursSlept - b.hoursSlept).shift().name;
   }
 
   calculateAverages(user, steps) {
     let date = user.activityRecord[0].date;
-
     let allUsersStepsCount = this.users.map(user => {
       return user.activityRecord.filter(activity => {
         return activity.date === date;
