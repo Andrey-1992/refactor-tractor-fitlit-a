@@ -1,19 +1,11 @@
 # Refactor Tractor (Fitlit Version A)
 
-## Setup
+## Process
 
-1. Within your group, decide on one person to have the project repository (repo) on their GitHub account. Then, that person should fork this repo - on the top right corner of this page, click the **Fork** button.
-1. Both memebers of the group should clone down the _forked_ repo. Since you don't want to name your project "refactor-tractor-fitlit-a", you can use an optional argument when you run git clone (you replace the [...] with the terminal command arguments): `git clone [remote-address] [what you want to name the repo]`
-1. Once you have cloned the repo, change into the directory and install the project dependencies. Run `npm install` to install project dependencies.
-1. Run `npm start` in the terminal to see the HTML page (you should see some boilerplate HTML displayed on the page) when you navigate to `http://localhost:8080/`
-1. Make sure both members of your team are collaborators on the forked repo.
+* Together, the team looked through the code base and discussed different `approaches to refactoring our class structure`. All of the applications data was originally written to be stored on the user. Because of this, we had to consider if restructuring would be less of a practice in refactoring/working with other's code and more of a complete rework of the original class structure. So our final decision to stick with the original class structure where the brains of the application was our user class. We also decided to take logic from the scripts.js file that was sorting through hardcoded data files, when it more appropriately should be using stored properties that on the user class to find and retrieve that data, and we created new methods on the user class to handle that logic. We then invoked those new methods to populate data on our dom.
+* Once we felt confident that we understood how the classes interacted, we were able to focus on our `fetch requests`. Becuase the user was the `brain` of this application, understanding our flow of which classes need to be instantiated before the next in order to populate and store the data in our user and user repositories was important. We had to take advantage of promise chaining to consider which data needed to be resolved before our next class could be created!
+  * User ---> user repository ---> then our activity, sleep, and hydration data.
+* Finally, we focused on our `post requests`. Users are able to post new data for each piece of health data the wellness application tracked. We used 3 different forms to catch unique piece of health data. We noticed that the backend is allowing us to post the multiples pieces of data for the same date! We would need to write backend code to allow us to write a `put request` if a user wants to modify their health data for the day. We currently have our methods set up to rely on only allowing for one piece of data per date. We were forward thinking so we wanted to keep our methods using a .find rather than a .filter/pop() so that we can stay true to the application, as allowing a user to enter data multiple times for one day would not give the user accurate calculations for our averages and we didn't want a short term fix!
+  * Finally, we focuse on our global date variable. When working with our post requests and our classes, the global date variable/how our methods were using this variable was key to how our application was running. So that we are able to eventually get rid of that global date variable and add a dropdown for users to choose a date, we added a default date to all of our methods that will choose the most recent date in the array if the date is not passed in as an argument to that method/ ie a date was not chosen by a user.
 
-## Testing
 
-Testing is set up, but you will need to add more tests to it throughout your work flow. If you run `npm install`, you should see tests run. 
-
-## Linting Your Code
-
-Run the command in your terminal `npm run lint` to run the linter on your JavaScript code. There will be errors and warnings right from the start in this starter kit, but that's ok - the linter is still running successfully.
-
-Your linter will look only at the JavaScript files you have within the `src` and the `test` directories.
