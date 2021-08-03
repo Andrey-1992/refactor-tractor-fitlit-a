@@ -353,13 +353,9 @@ function updateSleepInformation(user, userRepository) {
 
   sleepCalendarQualityAverageWeekly.innerText = user.calculateAverageQualityThisWeek(todayDate);
 
-  // sleepFriendLongestSleeper.innerText = userRepository.users.find(user => {
-  //   return user.id === userRepository.getLongestSleepers(todayDate)
-  // }).getFirstName();
-  //
-  // sleepFriendWorstSleeper.innerText = userRepository.users.find(user => {
-  //   return user.id === userRepository.getWorstSleepers(todayDate)
-  // }).getFirstName();
+  sleepFriendLongestSleeper.innerText = userRepository.getLongestSleepers(todayDate);
+  
+  sleepFriendWorstSleeper.innerText = userRepository.getWorstSleepers(todayDate);
 
   sleepInfoHoursAverageAlltime.innerText = user.hoursSleptAverage;
 
